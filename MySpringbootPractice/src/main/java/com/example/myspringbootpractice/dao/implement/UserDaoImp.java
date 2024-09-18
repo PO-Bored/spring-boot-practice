@@ -3,9 +3,11 @@ package com.example.myspringbootpractice.dao.implement;
 
 import com.example.myspringbootpractice.dao.UserDao;
 import com.example.myspringbootpractice.dto.User;
+import com.example.myspringbootpractice.rowMapper.UserRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -20,6 +22,18 @@ public class UserDaoImp implements UserDao {
 
     @Autowired
     NamedParameterJdbcTemplate jdbcTemplate;
+
+    @Override
+    public User getUserById(int id) {
+        String sql = "select * from user where id = :id";
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        User user=jdbcTemplate.query(sql,params,new UserRowMapper());
+
+
+        return null;
+    }
 
     @Override
     public Integer createUser(User user) {

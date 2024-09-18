@@ -4,7 +4,8 @@ import com.example.myspringbootpractice.dto.User;
 
 public interface UserDao {
 
-    Integer createUser(User user);
+    User getUserById(int id);
 
+    Integer createUser(User user);
 
 }
