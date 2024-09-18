@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -25,20 +26,24 @@ public class UserDaoImp implements UserDao {
 
     @Override
     public User getUserById(int id) {
-        String sql = "select * from user where id = :id";
+        String sql = "select * from users where id = :id";
 
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
-        User user=jdbcTemplate.query(sql,params,new UserRowMapper());
+        List<User> user =jdbcTemplate.query(sql,params,new UserRowMapper());
 
+        if(user.size()>0){
+            return user.get(0);
+        }else{
+            return null;
+        }
 
-        return null;
     }
 
     @Override
     public Integer createUser(User user) {
 
-        String sql = "Insert into user(name,account,password,phone,email) " +
+        String sql = "Insert into users(name,account,password,phone,email) " +
                 "values(:name,:account,:password,:phone,:email)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();

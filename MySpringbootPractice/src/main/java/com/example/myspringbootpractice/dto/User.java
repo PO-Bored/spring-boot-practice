@@ -17,7 +17,7 @@ public class User {
     @Email
     private String email;
 
-    private Integer phone;
+    private String phone;
 
     public String getName() {
         return name;
@@ -27,11 +27,11 @@ public class User {
         this.name = name;
     }
 
-    public Integer getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(Integer phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
