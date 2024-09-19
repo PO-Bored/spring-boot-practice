@@ -6,5 +6,5 @@ public interface UserService {
 
     User getUserById(int id);
 
-    Integer createUser(User user);
+    Integer register(User user);
 }
