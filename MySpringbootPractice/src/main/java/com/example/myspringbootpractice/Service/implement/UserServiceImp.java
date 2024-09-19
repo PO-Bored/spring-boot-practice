@@ -1,9 +1,9 @@
 package com.example.myspringbootpractice.Service.implement;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.example.myspringbootpractice.Service.UserService;
 import com.example.myspringbootpractice.dao.UserDao;
 import com.example.myspringbootpractice.dto.User;
+import com.example.myspringbootpractice.hash.PasswordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,8 @@ public class UserServiceImp implements UserService {
 
     private final static Logger log = LoggerFactory.getLogger(UserServiceImp.class);
 
+    @Autowired
+    private PasswordService passwordEncoder = new PasswordService();
 
     @Autowired
     private UserDao userDao;
@@ -29,11 +31,12 @@ public class UserServiceImp implements UserService {
     public Integer register(User userRequest) {
         User user = userDao.getUserByEmail(userRequest.getEmail());
         if(user != null){
-            log.warn("該eamil{}已被註冊", userRequest.getEmail());
+            log.warn("該eamil {} 已被註冊", userRequest.getEmail());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        String encodedPassword =
+        String encodedPassword = passwordEncoder.hashPassword(userRequest.getPassword());
+        userRequest.setPassword(encodedPassword);
 
 
         return userDao.createUser(userRequest);
