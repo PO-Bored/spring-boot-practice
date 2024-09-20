@@ -3,6 +3,7 @@ package com.example.myspringbootpractice.Service.implement;
 import com.example.myspringbootpractice.Service.UserService;
 import com.example.myspringbootpractice.dao.UserDao;
 import com.example.myspringbootpractice.dto.User;
+import com.example.myspringbootpractice.dto.UserLogin;
 import com.example.myspringbootpractice.hash.PasswordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +35,20 @@ public class UserServiceImp implements UserService {
             log.warn("該eamil {} 已被註冊", userRequest.getEmail());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+        user = userDao.getUserByAccount(userRequest.getAccount());
 
         String encodedPassword = passwordEncoder.hashPassword(userRequest.getPassword());
         userRequest.setPassword(encodedPassword);
 
 
         return userDao.createUser(userRequest);
+    }
+
+    @Override
+    public User login(UserLogin userLogin) {
+
+
+
+        return userDao.getUserByLogin(userLogin);
     }
 }
