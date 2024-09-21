@@ -2,7 +2,7 @@ package com.example.myspringbootpractice.hash;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-
+//Bcrypy加密
 @Component
 public class PasswordService {
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();

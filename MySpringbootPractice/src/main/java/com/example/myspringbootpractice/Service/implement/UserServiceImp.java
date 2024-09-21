@@ -1,5 +1,6 @@
 package com.example.myspringbootpractice.Service.implement;
 
+import com.example.myspringbootpractice.Enum.CheckResult;
 import com.example.myspringbootpractice.Service.UserService;
 import com.example.myspringbootpractice.dao.UserDao;
 import com.example.myspringbootpractice.dto.User;
@@ -30,25 +31,34 @@ public class UserServiceImp implements UserService {
 
     @Override
     public Integer register(User userRequest) {
-        User user = userDao.getUserByEmail(userRequest.getEmail());
-        if(user != null){
-            log.warn("該eamil {} 已被註冊", userRequest.getEmail());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-        user = userDao.getUserByAccount(userRequest.getAccount());
+        CheckResult checkResult = userDao.checkAcAndEm(userRequest);
 
+        if(checkResult == CheckResult.ACCOUNT_EXISTS){   //檢查帳號是否已被使用
+            log.warn("該帳號 {} 已被註冊",userRequest.getAccount());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "帳號已被使用");
+        }if(checkResult == CheckResult.EMAIL_EXISTS){    //檢查email是否已被使用
+            log.warn("該email {} 已被註冊", userRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email已被使用");
+        }
+        //密碼用Bcrypt加密
         String encodedPassword = passwordEncoder.hashPassword(userRequest.getPassword());
         userRequest.setPassword(encodedPassword);
-
 
         return userDao.createUser(userRequest);
     }
 
     @Override
     public User login(UserLogin userLogin) {
+        User user = userDao.getUserByAc(userLogin);
 
-
-
-        return userDao.getUserByLogin(userLogin);
+        if(user == null){
+            log.warn("該帳號不存在");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"帳號錯誤");
+        } else if(passwordEncoder.matchPassword(userLogin.getPassword(),user.getPassword())){
+            return user;
+        }else{
+            log.warn("密碼錯誤");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"密碼錯誤");
+        }
     }
 }

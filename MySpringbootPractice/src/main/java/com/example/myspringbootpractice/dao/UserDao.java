@@ -1,5 +1,6 @@
 package com.example.myspringbootpractice.dao;
 
+import com.example.myspringbootpractice.Enum.CheckResult;
 import com.example.myspringbootpractice.dto.User;
 import com.example.myspringbootpractice.dto.UserLogin;
 
@@ -9,12 +10,12 @@ public interface UserDao {
 
     User getUserByEmail(String email);
 
-    User getUserByAccount(String username);
+    User getUserByAc(UserLogin userLogin);
 
-    Integer checkPaAndEm(User userRequest);
+    CheckResult checkAcAndEm(User userRequest);
 
     Integer createUser(User userRequest);
 
-    User getUserByLogin(UserLogin userLogin);
+    CheckResult checkAcAndPa(UserLogin userLogin);
 
 }
