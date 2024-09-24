@@ -1,6 +1,7 @@
 package com.example.myspringbootpractice.Service.implement;
 
 import com.example.myspringbootpractice.Enum.CheckResult;
+import com.example.myspringbootpractice.MyExceptions.EmailExistsException;
 import com.example.myspringbootpractice.Service.UserService;
 import com.example.myspringbootpractice.dao.UserDao;
 import com.example.myspringbootpractice.dto.User;
@@ -35,10 +36,10 @@ public class UserServiceImp implements UserService {
 
         if(checkResult == CheckResult.ACCOUNT_EXISTS){   //檢查帳號是否已被使用
             log.warn("該帳號 {} 已被註冊",userRequest.getAccount());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "帳號已被使用");
+            throw new EmailExistsException(HttpStatus.BAD_REQUEST.toString(),"帳號已被使用，請重新確認");
         }if(checkResult == CheckResult.EMAIL_EXISTS){    //檢查email是否已被使用
             log.warn("該email {} 已被註冊", userRequest.getEmail());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email已被使用");
+            throw new EmailExistsException(HttpStatus.BAD_REQUEST.toString(),"信箱已被使用，請重新確認");
         }
         //密碼用Bcrypt加密
         String encodedPassword = passwordEncoder.hashPassword(userRequest.getPassword());
