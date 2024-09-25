@@ -9,7 +9,7 @@ public class EmailExistsException extends RuntimeException {
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
     }
-    public String getErroCode() {
+    public String getErrorCode() {
         return errorCode;
     }
     public String getErrorMessage() {

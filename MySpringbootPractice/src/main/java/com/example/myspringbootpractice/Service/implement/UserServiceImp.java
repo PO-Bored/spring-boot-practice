@@ -1,6 +1,7 @@
 package com.example.myspringbootpractice.Service.implement;
 
 import com.example.myspringbootpractice.Enum.CheckResult;
+import com.example.myspringbootpractice.MyExceptions.AcOrPaNotExistsException;
 import com.example.myspringbootpractice.MyExceptions.EmailExistsException;
 import com.example.myspringbootpractice.Service.UserService;
 import com.example.myspringbootpractice.dao.UserDao;
@@ -52,14 +53,11 @@ public class UserServiceImp implements UserService {
     public User login(UserLogin userLogin) {
         User user = userDao.getUserByAc(userLogin);
 
-        if(user == null){
-            log.warn("該帳號不存在");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"帳號錯誤");
-        } else if(passwordEncoder.matchPassword(userLogin.getPassword(),user.getPassword())){
+        if(passwordEncoder.matchPassword(userLogin.getPassword(),user.getPassword())){
             return user;
         }else{
-            log.warn("密碼錯誤");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"密碼錯誤");
+            log.warn("帳號或密碼錯誤");
+            throw new AcOrPaNotExistsException(HttpStatus.BAD_REQUEST.toString(),"帳號或密碼錯誤");
         }
     }
 }

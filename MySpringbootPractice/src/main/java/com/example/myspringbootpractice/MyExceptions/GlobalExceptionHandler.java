@@ -19,4 +19,10 @@ public class GlobalExceptionHandler {
         model.addAttribute("message", e.getErrorMessage());
         return "register";
     }
+
+    @ExceptionHandler(AcOrPaNotExistsException.class)
+    public String handleException(AcOrPaNotExistsException e, Model model) {
+        model.addAttribute("message", e.getErrorMessage());
+        return "login";
+    }
 }

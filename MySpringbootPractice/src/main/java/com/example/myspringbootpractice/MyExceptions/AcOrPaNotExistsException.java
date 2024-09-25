@@ -1,10 +1,10 @@
 package com.example.myspringbootpractice.MyExceptions;
 
-public class AccountExistsException extends RuntimeException {
+public class AcOrPaNotExistsException extends RuntimeException {
     private String errorCode;
     private String errorMessage;
 
-    public AccountExistsException(String errorCode, String errorMessage) {
+    public AcOrPaNotExistsException(String errorCode, String errorMessage) {
         super(errorMessage);
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;

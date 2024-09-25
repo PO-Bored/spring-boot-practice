@@ -34,12 +34,17 @@ public class UserController {
         return "register";
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody @Valid UserLogin loginRequest){
+    @RequestMapping(path="/login",method={RequestMethod.GET,RequestMethod.POST})
+    public String login(UserLogin loginRequest,Model model,HttpServletRequest request){
 
-        User user = userService.login(loginRequest);
+        if(request.getMethod().equals("POST")){
+            User user = userService.login(loginRequest);
+            message="登入成功";
+            model.addAttribute("message", message);
+        }
 
-        return ResponseEntity.status(201).body(user);
+
+        return "login";
     }
 
 }

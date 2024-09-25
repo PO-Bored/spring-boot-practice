@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>會員登入作業</title>
+    <title>登入作業</title>
 </head>
 <body>
     <fieldset>
-        <legend>會員登入</legend>
+        <legend>登入作業</legend>
         <div>
             <form method="post" action="/users/login">
                 <table>
@@ -16,24 +16,20 @@
                         <td><input type="text" name="account"></td>
                     </tr>
                     <tr>
-                        <td>使用者密碼</td>
+                        <td>密碼</td>
                         <td><input type="password" name="password"></td>
                     </tr>
                     <tr>
                         <td></td>
                         <td>
-                            <input type="reset" value="取消">
                             <input type="submit" value="登入">
                         </td>
                     </tr>
                 </table>
-
+                
             </form>
         </div>
-		<!--渲染狀態 -->
-		<div>
-			<h4 th:text="${message}"></h4>
-		</div>
+        <div><h3 th:text="${message}"></h3></div>
     </fieldset>
 </body>
 </html>
