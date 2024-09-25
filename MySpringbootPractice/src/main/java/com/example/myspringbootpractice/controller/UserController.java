@@ -23,7 +23,7 @@ public class UserController {
 
 
     @RequestMapping(path="/register",method={RequestMethod.GET,RequestMethod.POST})
-    public String createUser(User userRequest, Model model, HttpServletRequest request){
+    public String createUser(@Valid User userRequest, Model model, HttpServletRequest request){
         if(request.getMethod().equals("POST")){
             Integer id = userService.register(userRequest);
             User user = userService.getUserById(id);
@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @RequestMapping(path="/login",method={RequestMethod.GET,RequestMethod.POST})
-    public String login(UserLogin loginRequest,Model model,HttpServletRequest request){
+    public String login(@Valid UserLogin loginRequest,Model model,HttpServletRequest request){
 
         if(request.getMethod().equals("POST")){
             User user = userService.login(loginRequest);
