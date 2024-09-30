@@ -6,12 +6,13 @@ import com.example.myspringbootpractice.dto.UserLogin;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/users")
 public class UserController {
 
@@ -22,29 +23,21 @@ public class UserController {
 
 
 
-    @RequestMapping(path="/register",method={RequestMethod.GET,RequestMethod.POST})
-    public String createUser(@Valid User userRequest, Model model, HttpServletRequest request){
-        if(request.getMethod().equals("POST")){
+    @RequestMapping("/register")
+    public ResponseEntity<User> createUser(@RequestParam @Valid User userRequest){
+
             Integer id = userService.register(userRequest);
             User user = userService.getUserById(id);
-            message="帳號建立成功";
-            model.addAttribute("message", message);
-        }
 
-        return "register";
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
-    @RequestMapping(path="/login",method={RequestMethod.GET,RequestMethod.POST})
-    public String login(@Valid UserLogin loginRequest,Model model,HttpServletRequest request){
+    @RequestMapping("/login")
+    public ResponseEntity<User> login(@RequestParam @Valid UserLogin loginRequest){
 
-        if(request.getMethod().equals("POST")){
             User user = userService.login(loginRequest);
-            message="登入成功";
-            model.addAttribute("message", message);
-        }
 
-
-        return "login";
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
 }
