@@ -1,10 +1,9 @@
 package com.example.myspringbootpractice.Service.implement;
 
 import com.example.myspringbootpractice.Enum.CheckResult;
-import com.example.myspringbootpractice.MyExceptions.AcOrPaNotExistsException;
-import com.example.myspringbootpractice.MyExceptions.EmailExistsException;
 import com.example.myspringbootpractice.Service.UserService;
 import com.example.myspringbootpractice.dao.UserDao;
+import com.example.myspringbootpractice.dto.ResetPassword;
 import com.example.myspringbootpractice.dto.User;
 import com.example.myspringbootpractice.dto.UserLogin;
 import com.example.myspringbootpractice.hash.PasswordService;
@@ -14,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 @Component
 public class UserServiceImp implements UserService {
@@ -29,6 +30,17 @@ public class UserServiceImp implements UserService {
     @Override
     public User getUserById(int id) {
         return userDao.getUserById(id);
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+
+        if (userDao.getUserByEmail(email) != null) {
+            return userDao.getUserByEmail(email);
+        }else {
+            log.warn("該信箱 {} 無效",email);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "無效的信箱");
+        }
     }
 
     @Override
@@ -59,5 +71,11 @@ public class UserServiceImp implements UserService {
             log.warn("帳號或密碼錯誤");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"帳號或密碼錯誤");
         }
+    }
+
+    @Override
+    public void resetPassword(ResetPassword resetPassword) {
+
+
     }
 }

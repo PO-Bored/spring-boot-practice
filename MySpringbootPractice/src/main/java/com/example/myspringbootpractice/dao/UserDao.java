@@ -1,10 +1,17 @@
 package com.example.myspringbootpractice.dao;
 
 import com.example.myspringbootpractice.Enum.CheckResult;
+import com.example.myspringbootpractice.dto.ResetPassword;
 import com.example.myspringbootpractice.dto.User;
 import com.example.myspringbootpractice.dto.UserLogin;
 
+import java.util.Optional;
+
 public interface UserDao {
+
+    CheckResult checkAcAndEm(User userRequest);
+
+    CheckResult checkAcAndPa(UserLogin userLogin);
 
     User getUserById(int id);
 
@@ -12,10 +19,9 @@ public interface UserDao {
 
     User getUserByAc(UserLogin userLogin);
 
-    CheckResult checkAcAndEm(User userRequest);
-
     Integer createUser(User userRequest);
 
-    CheckResult checkAcAndPa(UserLogin userLogin);
+    void resetPassword(ResetPassword resetPassword);
+
 
 }

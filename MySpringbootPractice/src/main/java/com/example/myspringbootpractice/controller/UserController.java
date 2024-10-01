@@ -1,7 +1,9 @@
 package com.example.myspringbootpractice.controller;
 
 import com.example.myspringbootpractice.Service.UserService;
+import com.example.myspringbootpractice.dto.ResetPassword;
 import com.example.myspringbootpractice.dto.User;
+import com.example.myspringbootpractice.dto.UserEmail;
 import com.example.myspringbootpractice.dto.UserLogin;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -19,12 +21,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    private String message;
 
-
-
-    @RequestMapping("/register")
-    public ResponseEntity<User> createUser(@RequestParam @Valid User userRequest){
+    @PostMapping("/register")
+    public ResponseEntity<User> createUser(@RequestBody @Valid User userRequest){
 
             Integer id = userService.register(userRequest);
             User user = userService.getUserById(id);
@@ -32,12 +31,25 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
-    @RequestMapping("/login")
-    public ResponseEntity<User> login(@RequestParam @Valid UserLogin loginRequest){
+    @PostMapping("/login")
+    public ResponseEntity<User> login(@RequestBody @Valid UserLogin loginRequest){
 
             User user = userService.login(loginRequest);
 
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPa(@RequestBody UserEmail email){
+        userService.getUserByEmail(email.getEmail());
+        return ResponseEntity.status(HttpStatus.OK).body("請至信箱確認");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> getUserById(@RequestBody ResetPassword resetPassword){
+        userService.getUserByEmail(resetPassword.getEmail());
+        userService.resetPassword(resetPassword);
+        return ResponseEntity.status(HttpStatus.OK).body("密碼更改成功");
+
+    }
 }

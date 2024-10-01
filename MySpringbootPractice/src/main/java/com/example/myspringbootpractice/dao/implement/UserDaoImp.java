@@ -3,6 +3,7 @@ package com.example.myspringbootpractice.dao.implement;
 
 import com.example.myspringbootpractice.Enum.CheckResult;
 import com.example.myspringbootpractice.dao.UserDao;
+import com.example.myspringbootpractice.dto.ResetPassword;
 import com.example.myspringbootpractice.dto.User;
 import com.example.myspringbootpractice.dto.UserLogin;
 import com.example.myspringbootpractice.rowMapper.UserRowMapper;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class UserDaoImp implements UserDao {
@@ -23,7 +25,7 @@ public class UserDaoImp implements UserDao {
     @Autowired
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    @Override
+    @Override //創建帳號時,確認帳號與信箱是否已被使用
     public CheckResult checkAcAndEm(User userRequest) {
 
         String sql = "select account, email from users where account=:account or email=:email";
@@ -43,6 +45,31 @@ public class UserDaoImp implements UserDao {
             }
         }
         return CheckResult.NONE;
+    }
+
+    @Override //登入帳號時,確認帳號與密碼是否符合
+    public CheckResult checkAcAndPa(UserLogin userLogin) {
+        String sql = "select * from users where account = :account or password = :password";
+        List<User> user = namedParameterJdbcTemplate.query(sql,new BeanPropertySqlParameterSource(userLogin),new UserRowMapper());
+
+        boolean accountExists = false;
+        boolean passwordExists = false;
+
+        if(user.size()>0){
+            if(user.get(0).getAccount().equals(userLogin.getAccount())){
+                accountExists = true;
+            }if(user.get(0).getPassword().equals(userLogin.getPassword())){
+                passwordExists = true;
+            }
+            if(accountExists && passwordExists){
+                return CheckResult.PASS;
+            }if(accountExists){
+                return CheckResult.ACCOUNT_EXISTS;
+            }if(passwordExists){
+                return CheckResult.PASS;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -88,31 +115,6 @@ public class UserDaoImp implements UserDao {
     }
 
     @Override
-    public CheckResult checkAcAndPa(UserLogin userLogin) {
-        String sql = "select * from users where account = :account or password = :password";
-        List<User> user = namedParameterJdbcTemplate.query(sql,new BeanPropertySqlParameterSource(userLogin),new UserRowMapper());
-
-        boolean accountExists = false;
-        boolean passwordExists = false;
-
-        if(user.size()>0){
-            if(user.get(0).getAccount().equals(userLogin.getAccount())){
-                accountExists = true;
-            }if(user.get(0).getPassword().equals(userLogin.getPassword())){
-                passwordExists = true;
-            }
-            if(accountExists && passwordExists){
-                return CheckResult.PASS;
-            }if(accountExists){
-                return CheckResult.ACCOUNT_EXISTS;
-            }if(passwordExists){
-                return CheckResult.PASS;
-            }
-        }
-        return null;
-    }
-
-    @Override
     public Integer createUser(User userRequest) {
 
         String sql = "Insert into users(name,account,password,phone,email) " +
@@ -122,5 +124,11 @@ public class UserDaoImp implements UserDao {
         namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(userRequest), keyHolder);
         int id = keyHolder.getKey().intValue();
         return id;
+    }
+
+    @Override
+    public void resetPassword(ResetPassword resetPassword) {
+        String sql = "UPDATE users SET password = :password WHERE email=:email";
+        namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(resetPassword));
     }
 }
