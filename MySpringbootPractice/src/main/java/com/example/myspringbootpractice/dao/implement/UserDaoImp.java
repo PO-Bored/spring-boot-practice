@@ -128,7 +128,7 @@ public class UserDaoImp implements UserDao {
 
     @Override
     public void resetPassword(ResetPassword resetPassword) {
-        String sql = "UPDATE users SET password = :password WHERE email=:email";
+        String sql = "UPDATE users SET password = :newPassword WHERE email=:email";
         namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(resetPassword));
     }
 }

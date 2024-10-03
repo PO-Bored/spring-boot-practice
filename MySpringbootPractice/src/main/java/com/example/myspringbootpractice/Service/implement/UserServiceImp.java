@@ -75,7 +75,6 @@ public class UserServiceImp implements UserService {
 
     @Override
     public void resetPassword(ResetPassword resetPassword) {
-
-
+        userDao.resetPassword(resetPassword);
     }
 }

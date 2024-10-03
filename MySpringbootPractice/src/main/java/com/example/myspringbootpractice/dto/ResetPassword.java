@@ -8,7 +8,7 @@ public class ResetPassword {
     @Email
     private String email;
     @NotBlank
-    private String password;
+    private String newPassword;
 
     public String getEmail() {
         return email;
@@ -18,11 +18,11 @@ public class ResetPassword {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getNewPassword() {
+        return newPassword;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setNewPassword(String password) {
+        this.newPassword = password;
     }
 }
