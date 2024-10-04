@@ -75,6 +75,10 @@ public class UserServiceImp implements UserService {
 
     @Override
     public void resetPassword(ResetPassword resetPassword) {
+
+        String encodedPassword = passwordEncoder.hashPassword(resetPassword.getNewPassword());
+        resetPassword.setNewPassword(encodedPassword);
+
         userDao.resetPassword(resetPassword);
     }
 }
