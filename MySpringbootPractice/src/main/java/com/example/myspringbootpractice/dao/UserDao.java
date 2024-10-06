@@ -5,6 +5,7 @@ import com.example.myspringbootpractice.dto.ResetPassword;
 import com.example.myspringbootpractice.dto.User;
 import com.example.myspringbootpractice.dto.UserLogin;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface UserDao {
@@ -22,6 +23,10 @@ public interface UserDao {
     Integer createUser(User userRequest);
 
     void resetPassword(ResetPassword resetPassword);
+
+    void resetToken(String email, String token, LocalDateTime expireTime);
+
+    User getByToken(String token);
 
 
 }

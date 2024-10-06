@@ -14,7 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class UserServiceImp implements UserService {
@@ -74,11 +76,36 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    public void forgetPassword(String email) {
+        User user = getUserByEmail(email);
+        String token = UUID.randomUUID().toString();
+        userDao.resetToken(email,token, LocalDateTime.now().plusMinutes(30));
+
+        String resetPasswordUrl = "http://localhost:8080/users/reset-password?token=" + token;
+
+        //加了token的地址，之後要改寄到信箱的功能
+        System.out.println(resetPasswordUrl);
+    }
+
+    @Override
     public void resetPassword(ResetPassword resetPassword) {
 
         String encodedPassword = passwordEncoder.hashPassword(resetPassword.getNewPassword());
         resetPassword.setNewPassword(encodedPassword);
 
         userDao.resetPassword(resetPassword);
+    }
+
+    @Override
+    public boolean validateResetToken(String token){
+        Optional<User> optionalUser = Optional.ofNullable(userDao.getByToken(token));
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (user.getTokenExpiry().isAfter(LocalDateTime.now())) {
+                return true;  // Token 有效
+            }
+        }
+        return false;  // Token 無效或已過期
+
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,6 +104,19 @@ public class UserDaoImp implements UserDao {
     }
 
     @Override
+    public User getByToken(String token) {
+        String sql = "select * from users where reset_token = :token";
+        Map<String, Object> params = new HashMap<>();
+        params.put("token", token);
+        List<User> user = namedParameterJdbcTemplate.query(sql,params,new UserRowMapper());
+        if(user.size()>0){
+            return user.get(0);
+        }else{
+            return null;
+        }
+    }
+
+    @Override
     public User getUserByAc(UserLogin userLogin) {
         String sql = "select * from users where account = :account";
         List<User> user = namedParameterJdbcTemplate.query(sql,new BeanPropertySqlParameterSource(userLogin),new UserRowMapper());
@@ -126,9 +140,21 @@ public class UserDaoImp implements UserDao {
         return id;
     }
 
-    @Override//TODO
+    @Override
     public void resetPassword(ResetPassword resetPassword) {
-        String sql = "UPDATE users SET password = :newPassword WHERE email=:email";
+        String sql = "UPDATE users SET password = :newPassword,reset_token = NULL, token_expiry = NULL WHERE email=:email";
         namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(resetPassword));
+    }
+
+    @Override
+    public void resetToken(String email, String token, LocalDateTime expireTime) {
+        String sql = "UPDATE users SET reset_token = :token ," +
+                "token_expiry = :expireTime WHERE email=:email";
+        Map<String, Object> params = new HashMap<>();
+        params.put("email", email);
+        params.put("token", token);
+        params.put("expireTime", expireTime);
+        namedParameterJdbcTemplate.update(sql, params);
+
     }
 }
