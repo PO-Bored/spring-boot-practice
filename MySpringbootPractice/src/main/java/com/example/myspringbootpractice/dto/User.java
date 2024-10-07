@@ -21,7 +21,7 @@ public class User {
 
     private String phone;
 
-    private String Token;
+    private String token;
 
     private LocalDateTime tokenExpiry;
 
@@ -66,11 +66,11 @@ public class User {
     }
 
     public String getToken(String resetToken) {
-        return Token;
+        return token;
     }
 
     public void setToken(String token) {
-        Token = token;
+        this.token = token;
     }
 
     public LocalDateTime getTokenExpiry() {

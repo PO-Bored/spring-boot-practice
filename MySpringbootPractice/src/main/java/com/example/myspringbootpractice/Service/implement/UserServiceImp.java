@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,6 +27,9 @@ public class UserServiceImp implements UserService {
 
     @Autowired
     private PasswordService passwordEncoder = new PasswordService();
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     @Autowired
     private UserDao userDao;
@@ -85,6 +90,7 @@ public class UserServiceImp implements UserService {
 
         //加了token的地址，之後要改寄到信箱的功能
         System.out.println(resetPasswordUrl);
+        sendEmail(email,resetPasswordUrl);
     }
 
     @Override
@@ -106,6 +112,15 @@ public class UserServiceImp implements UserService {
             }
         }
         return false;  // Token 無效或已過期
+    }
+
+    public void sendEmail(String to, String resetLink){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("test1<zaqxswcde741963@gmail.com>");
+        message.setTo(to);
+        message.setSubject("密碼重新設置請求");
+        message.setText("重新設置密碼請按此連結"+resetLink);
+        mailSender.send(message);
 
     }
 }
