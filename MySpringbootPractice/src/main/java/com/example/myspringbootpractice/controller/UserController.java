@@ -5,17 +5,25 @@ import com.example.myspringbootpractice.dto.ResetPassword;
 import com.example.myspringbootpractice.dto.User;
 import com.example.myspringbootpractice.dto.UserEmail;
 import com.example.myspringbootpractice.dto.UserLogin;
+import com.example.myspringbootpractice.myException.registerExceptionExtend.FailException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
+@CrossOrigin
 public class UserController {
 
     @Autowired
@@ -23,21 +31,40 @@ public class UserController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<User> createUser(@RequestBody @Valid User userRequest){
+    public ResponseEntity<Map<String,Object>> createUser(@RequestBody @Valid User userRequest){
 
-            Integer id = userService.register(userRequest);
-            User user = userService.getUserById(id);
+        Integer id = userService.register(userRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+        User user = userService.getUserById(id);
+        Map<String,Object> response = new HashMap<>();
+        if(user!=null){
+            System.out.println(user.getAccount() + "帳號註冊成功!!!");
+            response.put("success",true);
+            response.put("message", "註冊成功!!!");
+            response.put("user",user.getName());
+            System.out.println(user.getName());
+            return new ResponseEntity<>(response,HttpStatus.CREATED);
+        }else{
+            System.out.println("註冊失敗");
+            throw new FailException();
+        }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody @Valid UserLogin loginRequest){
+    public ResponseEntity<Map<String,Object>> login(@RequestBody @Valid UserLogin loginRequest){
 
-            User user = userService.login(loginRequest);
+        User user = userService.login(loginRequest);
 
-        return ResponseEntity.status(HttpStatus.OK).body(user);
+        Map<String,Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "登入成功");
+        response.put("user", user);
+        System.out.println(user.getAccount()+" "+user.getPassword());
+
+        return ResponseEntity.ok(response);
     }
+
+
 
     @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPa(@RequestBody UserEmail email){
