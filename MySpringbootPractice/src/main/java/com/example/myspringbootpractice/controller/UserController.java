@@ -68,15 +68,20 @@ public class UserController {
 
     @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPa(@RequestBody UserEmail email){
-        userService.getUserByEmail(email.getEmail());
-        return ResponseEntity.status(HttpStatus.OK).body("請至信箱確認");
+        userService.forgetPassword(email.getEmail());
+
+        return ResponseEntity.status(HttpStatus.OK).body("請在30分鐘內至信箱確認");
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<String> getUserById(@RequestBody ResetPassword resetPassword){
-        userService.getUserByEmail(resetPassword.getEmail());
-        userService.resetPassword(resetPassword);
-        return ResponseEntity.status(HttpStatus.OK).body("密碼更改成功");
+    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestBody ResetPassword resetPassword){
+        boolean vaild = userService.validateResetToken(token);
+        if(vaild){
+            userService.resetPassword(resetPassword);
+            return ResponseEntity.status(HttpStatus.OK).body("密碼更改成功");
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("無效或已過期的 Token");
 
+        }
     }
 }

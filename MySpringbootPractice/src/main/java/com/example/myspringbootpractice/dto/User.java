@@ -3,6 +3,8 @@ package com.example.myspringbootpractice.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+import java.time.LocalDateTime;
+
 public class User {
     @NotBlank
     private String name;
@@ -18,6 +20,10 @@ public class User {
     private String email;
 
     private String phone;
+
+    private String token;
+
+    private LocalDateTime tokenExpiry;
 
     public String getName() {
         return name;
@@ -57,5 +63,21 @@ public class User {
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public String getToken(String resetToken) {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public LocalDateTime getTokenExpiry() {
+        return tokenExpiry;
+    }
+
+    public void setTokenExpiry(LocalDateTime tokenExpiry) {
+        this.tokenExpiry = tokenExpiry;
     }
 }
