@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+</head>
+
+<body>
+    <div>
+        <form id="loginForm">
+
+            <label for="account">帳號:</label>
+            <input type="text" id="account" name="account" placeholder="請輸入帳號" required><br>
+
+            <label for="password">密碼:</label>
+            <input type="password" id="password" name="password" placeholder="請輸入密碼" required>
+
+            <div class="actionForLogin">
+                <input type="submit" value="登入">
+                <a href="register.html">註冊</a>
+                <a href="ForgotPassword.html">忘記密碼</a>
+            </div>
+        </form>
+        <div id="responseMessage"></div>
+    </div>
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const account = document.getElementById("account").value;
+            const password = document.getElementById("password").value;
+
+            const data = {
+                "account": account,
+                "password": password
+            }
+
+            try {
+                const response = await fetch("http://localhost:8080/users/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                console.log("HTTP 狀態碼:", response.status); // 應該顯示 200
+                console.log("response.ok:", response.ok);   // 應該是 true
+
+                const result = await response.json();
+                if (response.ok) {
+                    
+
+                    const userData = result.user;
+                    console.log("用戶資料:", userData);
+
+                    document.getElementById("responseMessage").style.color = "green";
+                    document.getElementById("responseMessage").innerText = result.message + " " + "歡迎" + userData.name ;
+
+                    setTimeout(() => {
+                        window.location.href = "home.html";
+                    }, 2000);
+
+                } else {
+                    console.log(response.status);
+                    console.log(result.message);
+                    console.log(result);
+
+                    document.getElementById("responseMessage").style.color = "red";
+                    document.getElementById("responseMessage").innerText = result.message;
+                }
+            } catch (error) {
+                console.error("登入請求失敗:", error);
+                document.getElementById("responseMessage").innerText = "系統錯誤，請稍後再試。";
+            }
+        })
+    </script>
+</body>
+
+</html>
