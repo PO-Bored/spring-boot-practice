@@ -66,12 +66,12 @@ public class UserController {
 
 
 
-    @PostMapping("/forgot-password")
-    public ResponseEntity<String> forgotPa(@RequestBody UserEmail email){
-        userService.forgetPassword(email.getEmail());
-
-        return ResponseEntity.status(HttpStatus.OK).body("請在30分鐘內至信箱確認");
-    }
+//    @PostMapping("/forgot-password")
+//    public ResponseEntity<String> forgotPa(@RequestBody UserEmail email){
+//        userService.forgetPassword(email.getEmail());
+//
+//        return ResponseEntity.status(HttpStatus.OK).body("請在30分鐘內至信箱確認");
+//    }
 
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestBody ResetPassword resetPassword){

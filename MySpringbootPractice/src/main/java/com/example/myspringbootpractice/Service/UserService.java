@@ -14,8 +14,8 @@ public interface UserService {
 
     User getUserByEmail(String email);
 
-    void forgetPassword(String email);
-
+//    void forgetPassword(String email);
+//
     void resetPassword(ResetPassword resetPassword);
 
     boolean validateResetToken(String token);

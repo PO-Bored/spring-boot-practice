@@ -30,8 +30,8 @@ public class UserServiceImp implements UserService {
     @Autowired
     private PasswordService passwordEncoder = new PasswordService();
 
-    @Autowired
-    private JavaMailSender mailSender;
+//    @Autowired
+//    private JavaMailSender mailSender;
 
     @Autowired
     private UserDao userDao;
@@ -87,18 +87,18 @@ public class UserServiceImp implements UserService {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "帳號或密碼錯誤");
     }
 
-    @Override
-    public void forgetPassword(String email) {
-        User user = getUserByEmail(email);
-        String token = UUID.randomUUID().toString();
-        userDao.resetToken(email,token, LocalDateTime.now().plusMinutes(30));
-
-        String resetPasswordUrl = "http://localhost:8080/users/reset-password?token=" + token;
-
-        //加了token的地址，之後要改寄到信箱的功能
-        System.out.println(resetPasswordUrl);
-        sendEmail(email,resetPasswordUrl);
-    }
+//    @Override
+//    public void forgetPassword(String email) {
+//        User user = getUserByEmail(email);
+//        String token = UUID.randomUUID().toString();
+//        userDao.resetToken(email,token, LocalDateTime.now().plusMinutes(30));
+//
+//        String resetPasswordUrl = "http://localhost:8080/users/reset-password?token=" + token;
+//
+//        //加了token的地址，之後要改寄到信箱的功能
+//        System.out.println(resetPasswordUrl);
+//        sendEmail(email,resetPasswordUrl);
+//    }
 
     @Override
     public void resetPassword(ResetPassword resetPassword) {
@@ -121,13 +121,13 @@ public class UserServiceImp implements UserService {
         return false;  // Token 無效或已過期
     }
 
-    public void sendEmail(String to, String resetLink){
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("test1<zaqxswcde741963@gmail.com>");
-        message.setTo(to);
-        message.setSubject("密碼重新設置請求");
-        message.setText("重新設置密碼請按此連結"+resetLink);
-        mailSender.send(message);
-
-    }
+//    public void sendEmail(String to, String resetLink){
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setFrom("test1<zaqxswcde741963@gmail.com>");
+//        message.setTo(to);
+//        message.setSubject("密碼重新設置請求");
+//        message.setText("重新設置密碼請按此連結"+resetLink);
+//        mailSender.send(message);
+//
+//    }
 }
