@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="css/home.css">
     <title>首頁</title>
     <style>
-        
         .cart-button {
             display: flex;
             align-items: center;
@@ -28,7 +27,8 @@
         }
 
         .cart-button i {
-            margin-right: 10px; /* 圖標和文字之間的間距 */
+            margin-right: 10px;
+            /* 圖標和文字之間的間距 */
         }
 
         .cart-counter {
@@ -55,72 +55,9 @@
     <div>
         <h2>商品訂購</h2>
     </div>
-    
-    <main>
-        
-        <!--商品1-->
-        <div class="product">
-            <img src="../MySpringbootPractice/src/main/resources/static/img/PS/DualSence.jpg" alt="控制器" width="300" height="200">
-            <h3>PS5 DualSence 無線控制器</h3>
-            <p>售價 $2,280</p>
-            <button class="add-to-cart" data-name="商品1" data-price="2280">加入購物車</button>
-        </div>
 
-        <!--商品2-->
-        <div class="product">
-            <img src="../MySpringbootPractice/src/main/resources/static/img/PS/DualSence+.jpg" alt="控制器plus" width="300" height="200">
-            <h3>DualSence Edge無線控制器</h3>
-            <p>售價 $6,480</p>
-            <button class="add-to-cart" data-name="商品2" data-price="6480">加入購物車</button>
-        </div>
+    <main id="product-list">
 
-        <!--商品3-->
-        <div class="product">
-            <img src="../MySpringbootPractice/src/main/resources/static/img/PS/Explore.jpg" alt="無線耳塞式耳機" width="300" height="200">
-            <h3>PULSE Explore 無線耳塞式耳機</h3>
-            <p>售價 $6,480</p>
-            <button class="add-to-cart" data-name="商品3" data-price="6480">加入購物車</button>
-        </div>
-
-        <!--商品4-->
-        <div class="product">
-            <img src="../MySpringbootPractice/src/main/resources/static/img/PS/Elite.jpg" alt="無線耳機" width="300" height="200">
-            <h3>PS5 PULSE Elite 無限耳機</h3>
-            <p>售價 $4,680</p>
-            <button class="add-to-cart" data-name="商品4" data-price="4680">加入購物車</button>
-        </div>
-
-        <!--商品5-->
-        <div class="product">
-            <img src="../MySpringbootPractice/src/main/resources/static/img/PS/PS5.jpg" alt="PS5" width="300" height="200">
-            <h3>PS5光碟版</h3>
-            <p>售價 $15,580</p>
-            <button class="add-to-cart" data-name="商品5" data-price="15580">加入購物車</button>
-        </div>
-
-        <!--商品6-->
-        <div class="product">
-            <img src="../MySpringbootPractice/src/main/resources/static/img/PS/PS5Slim.jpg" alt="PS5Slim" width="300" height="200">
-            <h3>PS5Slim數位板</h3>
-            <p>售價 $14,580</p>
-            <button class="add-to-cart" data-name="商品6" data-price="14580">加入購物車</button>
-        </div>
-
-        <!--商品7-->
-        <div class="product">
-            <img src="../MySpringbootPractice/src/main/resources/static/img/PS/PS5PRO.jpg" alt="PS5PRO" width="300" height="200">
-            <h3>PS5PRO</h3>
-            <p>售價 $24,280</p>
-            <button class="add-to-cart" data-name="商品7" data-price="24280">加入購物車</button>
-        </div>
-
-        <!--商品8-->
-        <div class="product">
-            <img src="../MySpringbootPractice/src/main/resources/static/img/PS/Elden%20Ring.jpg" alt="Elden_Ring" width="300" height="200">
-            <h3>Elden Ring 遊戲光碟</h3>
-            <p>售價 $2,190</p>
-            <button class="add-to-cart" data-name="商品8" data-price="2190">加入購物車</button>
-        </div>
     </main>
     <section class="cart">
         <!-- 購物車按鈕 -->
@@ -129,7 +66,42 @@
             <div class="cart-counter" id="cartCounter">0</div>
         </button>
     </section>
+    <script>
+        async function fetchProducts() {
+            try {
+                const response = await fetch('http://localhost:8080/product/AllProduct');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch products');
+                }
+                const products = await response.json();
+                console.log(products);
+                readProducts(products);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+                document.getElementById('product-list').innerHTML = '<p>Failed to load products.</p>';
+            }
 
+            //讀取product list
+            function readProducts(products) {
+                const productList = document.getElementById("product-list");
+                productList.innerHTML = " ";//把已有的內容清空
+
+                products.forEach(product => {
+                    const productDiv = document.createElement('div');
+                    productDiv.className = "product";
+                    productDiv.innerHTML = `
+                        <img src = "${product.imgurl}" alt = ${product.name}width = "300" height = "200" >
+                        <h3>${product.name}</h3>
+                        <p>售價 $${product.price}</p>
+                        <button class="add-to-cart" data-name=${product.name} data-price=${product.price}>加入購物車</button>
+                        `;
+                    productList.appendChild(productDiv);
+                });
+            }
+        }
+        //開啟網頁立即執行方法
+        fetchProducts();
+    </script>
 
 </body>
 
