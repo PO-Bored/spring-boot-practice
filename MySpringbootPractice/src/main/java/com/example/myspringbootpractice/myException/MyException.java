@@ -2,6 +2,7 @@ package com.example.myspringbootpractice.myException;
 
 import com.example.myspringbootpractice.hash.PasswordService;
 import com.example.myspringbootpractice.myException.forgotPassword.InvalidException;
+import com.example.myspringbootpractice.myException.productExceptionExtend.ProductNotfound;
 import com.example.myspringbootpractice.myException.registerExceptionExtend.AccountException;
 import com.example.myspringbootpractice.myException.registerExceptionExtend.EmailException;
 import com.example.myspringbootpractice.myException.registerExceptionExtend.FailException;
@@ -70,4 +71,16 @@ public class MyException {
 
         return ResponseEntity.status(ex.getErrorCode()).body(errorResponse);
     }
+
+    @ExceptionHandler(ProductNotfound.class)
+    public ResponseEntity<Map<String,Object>>  handleProductNotfoundException(ProductNotfound ex) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("success", false);
+        errorResponse.put("message", ex.getMessage());
+        errorResponse.put("errorCode", ex.getErrorCode());
+        errorResponse.put("timestamp", System.currentTimeMillis());
+
+        return ResponseEntity.status(ex.getErrorCode()).body(errorResponse);
+    }
+
 }

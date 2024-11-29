@@ -8,7 +8,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class ProductDaoImp implements ProductDao {
@@ -23,4 +25,21 @@ public class ProductDaoImp implements ProductDao {
         List<Product> products = namedParameterJdbcTemplate.query(sql, new ProductRowMapper());
         return products;
     }
+
+    @Override
+    public Product getProductById(int productId) {
+        String sql = "SELECT  productid, name, description, price, stock," +
+                "img_url FROM mycart.product WHERE productid=:productid";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("productid", productId);
+        List<Product> products = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
+
+        if (products != null && products.size() > 0) {
+            return products.get(0);
+        }
+        return null;
+    }
+
+
 }
