@@ -38,12 +38,13 @@
             }
 
             try {
-                const response = await fetch("http://localhost:8080/users/login", {
+                const response = await fetch("http://127.0.0.1:5050/users/login", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json; charset=utf-8"
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(data),
+                    credentials: "include"
                 });
 
                 console.log("HTTP 狀態碼:", response.status); // 應該顯示 200

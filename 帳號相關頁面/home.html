@@ -69,7 +69,7 @@
     <script>
         async function fetchProducts() {
             try {
-                const response = await fetch('http://localhost:8080/product/AllProduct');
+                const response = await fetch('http://127.0.0.1:5050/product/AllProduct');
                 if (!response.ok) {
                     throw new Error('Failed to fetch products');
                 }

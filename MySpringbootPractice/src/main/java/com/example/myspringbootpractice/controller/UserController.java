@@ -7,6 +7,7 @@ import com.example.myspringbootpractice.dto.User;
 import com.example.myspringbootpractice.dto.UserEmail;
 import com.example.myspringbootpractice.dto.UserLogin;
 import com.example.myspringbootpractice.myException.registerExceptionExtend.FailException;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -53,15 +54,20 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String,Object>> login(@RequestBody @Valid UserLogin loginRequest){
+    public ResponseEntity<Map<String,Object>> login(@RequestBody @Valid UserLogin loginRequest,HttpServletResponse httpResponse){
 
-        User user = userService.login(loginRequest);
+        User user = userService.login(loginRequest);//認證user
 
         // 生成 Token
         String token = JwtUtil.generateToken(user.getId(), user.getAccount());
 
         //把Token存入cookie
         Cookie cookie = new Cookie("authToken", token);
+        cookie.setPath("/");
+        cookie.setHttpOnly(false);//測試食用false，不然cookie只會被後端讀取
+        cookie.setMaxAge(3600);
+        cookie.setSecure(false);//此功能使用true的話只能在HTTPS的連線中傳輸
+        httpResponse.addCookie(cookie);
 
         Map<String,Object> response = new HashMap<>();
         response.put("success", true);
@@ -91,5 +97,13 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("無效或已過期的 Token");
 
         }
+    }
+
+    //測試前端是否正確接收到cookie
+    @GetMapping("/protected-resource")
+    public ResponseEntity<String> getProtectedResource(@CookieValue("authToken") String token) {
+        Claims claims = JwtUtil.validateToken(token); // 驗證 JWT
+        String username = claims.get("username", String.class);
+        return ResponseEntity.ok("Hello, " + username);
     }
 }

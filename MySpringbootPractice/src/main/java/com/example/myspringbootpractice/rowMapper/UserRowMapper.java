@@ -19,12 +19,12 @@ public class UserRowMapper implements RowMapper<User> {
         user.setPassword(rs.getString("password"));
         user.setPhone(rs.getString("phone"));
         user.setEmail(rs.getString("email"));
-        user.getToken(rs.getString("reset_token"));
+        //user.getToken(rs.getString("reset_token"));
         // 從資料庫中的 TIMESTAMP 字段提取並轉換為 LocalDateTime
-        Timestamp tokenExpiryTimestamp = rs.getTimestamp("token_expiry");
-        if (tokenExpiryTimestamp != null) {
-            user.setTokenExpiry(tokenExpiryTimestamp.toLocalDateTime());
-        }
+//        Timestamp tokenExpiryTimestamp = rs.getTimestamp("token_expiry");
+//        if (tokenExpiryTimestamp != null) {
+//            user.setTokenExpiry(tokenExpiryTimestamp.toLocalDateTime());
+//        }
 
         return user;
     }
