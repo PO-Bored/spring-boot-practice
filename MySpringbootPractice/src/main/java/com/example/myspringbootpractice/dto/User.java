@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 public class User {
+
+    private int id;
+
     @NotBlank
     private String name;
 
@@ -63,6 +66,14 @@ public class User {
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getToken(String resetToken) {

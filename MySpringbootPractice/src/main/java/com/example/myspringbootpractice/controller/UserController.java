@@ -1,11 +1,13 @@
 package com.example.myspringbootpractice.controller;
 
+import com.example.myspringbootpractice.Service.JwtUtil;
 import com.example.myspringbootpractice.Service.UserService;
 import com.example.myspringbootpractice.dto.ResetPassword;
 import com.example.myspringbootpractice.dto.User;
 import com.example.myspringbootpractice.dto.UserEmail;
 import com.example.myspringbootpractice.dto.UserLogin;
 import com.example.myspringbootpractice.myException.registerExceptionExtend.FailException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -54,6 +56,12 @@ public class UserController {
     public ResponseEntity<Map<String,Object>> login(@RequestBody @Valid UserLogin loginRequest){
 
         User user = userService.login(loginRequest);
+
+        // 生成 Token
+        String token = JwtUtil.generateToken(user.getId(), user.getAccount());
+
+        //把Token存入cookie
+        Cookie cookie = new Cookie("authToken", token);
 
         Map<String,Object> response = new HashMap<>();
         response.put("success", true);
