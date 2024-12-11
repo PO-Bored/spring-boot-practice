@@ -121,7 +121,6 @@
             }).join(''));
             return JSON.parse(jsonPayload);
         }
-
         // 從 Cookie 中提取 Token
         function getCookie(name) {
             console.log(document.cookie);
@@ -130,8 +129,6 @@
             const parts = value.split(`; ${name}=`);
             if (parts.length === 2) return parts.pop().split(';').shift();
         }
-        
-
         // 動態顯示用戶名稱
         function displayUserName() {
             const token = getCookie('authToken'); // 從 Cookie 中獲取 Token
