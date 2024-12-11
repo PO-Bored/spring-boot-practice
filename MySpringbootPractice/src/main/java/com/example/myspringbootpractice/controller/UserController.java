@@ -56,18 +56,26 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<Map<String,Object>> login(@RequestBody @Valid UserLogin loginRequest,HttpServletResponse httpResponse){
 
-        User user = userService.login(loginRequest);//認證user
+//        User user = userService.login(loginRequest);//認證user
+//        // 生成 Token
+//        String token = JwtUtil.generateToken(user.getId(), user.getAccount());
+//        //把Token存入cookie
+//        Cookie cookie = new Cookie("authToken", token);
+//        cookie.setPath("/");
+//        cookie.setHttpOnly(false);//測試時用false，不然cookie只會被後端讀取
+//        cookie.setMaxAge(3600);
+//        cookie.setSecure(false);//此功能使用true的話只能在HTTPS的連線中傳輸
+//        httpResponse.addCookie(cookie);
 
-        // 生成 Token
+        User user = userService.login(loginRequest); // 認證用戶
         String token = JwtUtil.generateToken(user.getId(), user.getAccount());
 
-        //把Token存入cookie
-        Cookie cookie = new Cookie("authToken", token);
-        cookie.setPath("/");
-        cookie.setHttpOnly(false);//測試食用false，不然cookie只會被後端讀取
-        cookie.setMaxAge(3600);
-        cookie.setSecure(false);//此功能使用true的話只能在HTTPS的連線中傳輸
-        httpResponse.addCookie(cookie);
+        // 自定義 Set-Cookie 標頭，添加 SameSite=None
+        String cookieValue = String.format(
+                "authToken=%s; Path=/; Max-Age=3600; HttpOnly; SameSite=None; Secure",
+                token
+        );
+        httpResponse.setHeader("Set-Cookie", cookieValue);
 
         Map<String,Object> response = new HashMap<>();
         response.put("success", true);
