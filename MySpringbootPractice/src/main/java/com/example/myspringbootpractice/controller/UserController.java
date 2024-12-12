@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -67,15 +68,20 @@ public class UserController {
 //        cookie.setSecure(false);//此功能使用true的話只能在HTTPS的連線中傳輸
 //        httpResponse.addCookie(cookie);
 
+//        User user = userService.login(loginRequest); // 認證用戶
+//        String token = JwtUtil.generateToken(user.getId(), user.getAccount());
+//
+//        // 自定義 Set-Cookie 標頭，添加 SameSite=None
+//        String cookieValue = String.format(
+//                "authToken=%s; Path=/; Max-Age=3600; HttpOnly; SameSite=None; Secure",
+//                token
+//        );
+//        httpResponse.setHeader("Set-Cookie", cookieValue);
         User user = userService.login(loginRequest); // 認證用戶
-        String token = JwtUtil.generateToken(user.getId(), user.getAccount());
+        String token = JwtUtil.generateToken(user.getId(),user.getName());
+        ResponseCookie cookie = ResponseCookie.from("authToken",token)
+                .
 
-        // 自定義 Set-Cookie 標頭，添加 SameSite=None
-        String cookieValue = String.format(
-                "authToken=%s; Path=/; Max-Age=3600; HttpOnly; SameSite=None; Secure",
-                token
-        );
-        httpResponse.setHeader("Set-Cookie", cookieValue);
 
         Map<String,Object> response = new HashMap<>();
         response.put("success", true);
