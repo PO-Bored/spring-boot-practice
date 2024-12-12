@@ -22,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,8 +81,16 @@ public class UserController {
         User user = userService.login(loginRequest); // 認證用戶
         String token = JwtUtil.generateToken(user.getId(),user.getName());
         ResponseCookie cookie = ResponseCookie.from("authToken",token)
-                .
+                .httpOnly(false)  //讓javaScript讀取
+                .secure(false)    //支持http傳輸
+                .path("/")        //適用於所有域名
+                .maxAge(Duration.ofHours(1))
+                //.sameSite("None")
+                .build();
+        httpResponse.setHeader("Set-Cookie",cookie.toString());
 
+        System.out.println("cookie傳遞完成");
+        System.out.println(cookie);
 
         Map<String,Object> response = new HashMap<>();
         response.put("success", true);

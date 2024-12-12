@@ -111,7 +111,6 @@
             
         }
 
-        console.log(document.getCookie);
 
         //下面為測試名稱顯示以及解析token跟cookie
         // 解析 JWT Token 的 Payload
@@ -139,7 +138,7 @@
             const token = getCookie('authToken'); // 從 Cookie 中獲取 Token
             if (token) {
                 const userInfo = parseJwt(token); // 解碼 Token
-                const userName = userInfo.username; // 假設 Token Payload 中有 `username` 字段
+                const userName = userInfo.userAccount; // 假設 Token Payload 中有 `userAccount` 字段
                 document.getElementById('userGreeting').innerText = `歡迎, ${userName}`;
             } else {
                 document.getElementById('userGreeting').innerText = '未登入';

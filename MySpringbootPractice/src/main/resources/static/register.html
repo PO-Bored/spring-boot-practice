@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>會員註冊</title>
+    <style>
+        .register {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <form id="registerForm">
+            <label>名稱:<input type="text" id="userName" name="name" placeholder="請輸入名稱" required></label><br>
+            <label>帳號:<input type="text" id="account" name="account" placeholder="請輸入帳號" required></label><br>
+            <label>密碼:<input type="text" id="password" name="password" placeholder="請輸入密碼" required></label><br>
+            <label>信箱:<input type="text" id="email" name="email" placeholder="請輸入信箱" required></label><br>
+            <label>電話:<input type="text" id="phone" name="phone" placeholder="請輸入電話">(選填)</label>
+
+            <div class="register">
+                <input type="submit" value="註冊">
+                <a href="Login.html">取消</a>
+            </div>
+        </form>
+    </div>
+    <div id="message"></div>
+
+    <script>
+        async function register(event) {
+            event.preventDefault();
+
+            const name = document.getElementById("userName").value;
+            const account = document.getElementById("account").value;
+            const password = document.getElementById("password").value;
+            const email = document.getElementById("email").value;
+            const phone = document.getElementById("phone").value;
+
+            const data = {
+                "name": name,
+                "account": account,
+                "password": password,
+                "email": email,
+                "phone": phone
+            }
+
+            try {
+                const response = await fetch("http://localhost:8080/users/register",{
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                
+
+                if(response.ok) {
+                    const user = result.user;
+                    console.log(result);
+                    document.getElementById("message").innerText = `註冊成功，歡迎${user}會員的加入`;
+                    
+                    setTimeout(() => {
+                        window.location.href = "home.html";
+                    }, 2000);
+                } else {
+                    const message = result.message;
+                    document.getElementById("message").innerText = `註冊失敗，${message}`;
+                }
+            }catch(error) {
+                console.error("註冊失敗:", error);
+                document.getElementById("responseMessage").innerText = "系統錯誤，請稍後再試。";
+            }
+        }
+
+        document.getElementById("registerForm").addEventListener("submit", register);
+    </script>
+</body>
+
+</html>
