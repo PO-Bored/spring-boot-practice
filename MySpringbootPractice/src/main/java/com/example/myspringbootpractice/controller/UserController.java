@@ -28,7 +28,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin
+//@CrossOrigin 跨域請求
 public class UserController {
 
     @Autowired

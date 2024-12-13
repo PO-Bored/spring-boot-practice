@@ -11,7 +11,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/product")
-@CrossOrigin
+//@CrossOrigin 跨域請求
 public class ProductController {
 
     @Autowired

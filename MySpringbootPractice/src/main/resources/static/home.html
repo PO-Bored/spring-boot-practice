@@ -93,11 +93,12 @@
                 products.forEach(product => {
                     const productDiv = document.createElement('div');
                     productDiv.className = "product";
+                    productDiv.dataset.id = product.productId;
                     productDiv.innerHTML = `
                         <img src = "${product.imgurl}" alt = ${product.name}width = "300" height = "200" >
                         <h3>${product.name}</h3>
                         <p>售價 $${product.price}</p>
-                        <button class="add-to-cart" data-name=${product.name} data-price=${product.price}>加入購物車</button>
+                        <button class="add-to-cart" >加入購物車</button>
                         `;
                     productList.appendChild(productDiv);
                 });
