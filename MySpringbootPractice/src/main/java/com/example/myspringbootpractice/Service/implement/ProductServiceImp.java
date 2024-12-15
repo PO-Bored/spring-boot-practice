@@ -2,6 +2,7 @@ package com.example.myspringbootpractice.Service.implement;
 
 import com.example.myspringbootpractice.Service.ProductService;
 import com.example.myspringbootpractice.dao.ProductDao;
+import com.example.myspringbootpractice.dto.CartPro;
 import com.example.myspringbootpractice.dto.Product;
 import com.example.myspringbootpractice.myException.productExceptionExtend.ProductNotfound;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,11 @@ public class ProductServiceImp implements ProductService {
         return product;
     }
 
-
+    @Override
+    public String addProductToCart(CartPro cartPro) {
+        if(productDao.addProductToCart(cartPro)){
+            return "成功加入購物車";
+        }
+        return "商品已在購物車";
+    }
 }

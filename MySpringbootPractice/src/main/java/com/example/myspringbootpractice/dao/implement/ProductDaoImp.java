@@ -1,6 +1,7 @@
 package com.example.myspringbootpractice.dao.implement;
 
 import com.example.myspringbootpractice.dao.ProductDao;
+import com.example.myspringbootpractice.dto.CartPro;
 import com.example.myspringbootpractice.dto.Product;
 import com.example.myspringbootpractice.rowMapper.ProductRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +42,16 @@ public class ProductDaoImp implements ProductDao {
         return null;
     }
 
+    @Override
+    public boolean addProductToCart(CartPro cartPro) {
 
+        String sql = "INSERT IGNORE INTO productsInCart (userId, productId) \n" +
+                "VALUES (:userId, :productId);";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", cartPro.getUserId());
+        map.put("productId", cartPro.getProductId());
+        int rowsAffected = namedParameterJdbcTemplate.update(sql, map);
+        return rowsAffected > 0;
+    }
 }

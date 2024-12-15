@@ -69,13 +69,55 @@
             <div class="cart-counter" id="cartCounter">0</div>
         </button>
     </section>
+
+
+
     <script>
+        //第一部分
+        //下面為測試名稱顯示以及解析token跟cookie
+        // 解析 JWT Token 的 Payload
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1]; // 取得第二部分 (Payload)
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        }
+
+        // 從 Cookie 中提取 Token
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        //第二部分
+        // 動態顯示用戶名稱
+        function displayUserName() {
+            const token = getCookie('authToken'); // 從 Cookie 中獲取 Token
+            console.log(token);
+            if (token) {
+                const userInfo = parseJwt(token); // 解碼 Token
+                const userAccount = userInfo.userAccount; // 假設 Token Payload 中有 `userAccount` 字段
+                document.getElementById('userGreeting').innerText = `歡迎, ${userAccount}`;
+            } else {
+                document.getElementById('userGreeting').innerText = '未登入';
+            }
+        }
+        console.log(getCookie('authToken'));
+
+
+        //第三部分
         async function fetchProducts() {
             try {
-                const response = await fetch('http://localhost:8080/product/AllProduct');
+                const response = await fetch('http://localhost:8080/product/AllProduct', {
+                    method: "GET",
+                    credentials: "include" // 攜帶 Cookie
+                });
                 if (!response.ok) {
                     throw new Error('Failed to fetch products');
-                    credentials: "include" // 攜帶 Cookie
+
                 }
                 const products = await response.json();
                 console.log(products);
@@ -102,57 +144,68 @@
                         `;
                     productList.appendChild(productDiv);
                 });
+
+                // 為所有加入購物車的按鈕綁定事件處理函數
+                document.getElementById('product-list').addEventListener('click', (event) => {
+                    if (event.target.classList.contains('add-to-cart')) {
+                        addToCart(event);
+                    }
+                });
             }
         }
-        //開啟網頁立即執行方法
+
+        function validateAuthToken() {
+            const token = getCookie('authToken');
+            if (!token) {
+                console.error("authToken 不存在於 Cookie 中");
+                return null;
+            }
+            return token;
+        }
+
+        function addToCart(event) {
+
+            const token = getCookie('authToken'); //在cookie裡取得token
+
+            const payload = parseJwt(token); //解析token的payload
+
+            console.log(payload);
+
+            if (payload && payload.sub) {
+                const userId = payload.sub; //從payload提取userId
+
+                // 從事件的目標按鈕取得父層的 productDiv，並提取 productId
+                const productDiv = event.target.closest('.product');
+                const productId = productDiv.dataset.id; //從dataset取得productId
+
+                //定義要傳送的資料
+                const cartPro = {
+                    userId: userId,
+                    productId: productId
+                };
+
+                //發送POST請求到後端
+                fetch("http://localhost:8080/product/AddToCart", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(cartPro)
+                })
+                    .then(reponse => reponse.text())
+                    .then(data => {
+                        alert(data)
+                        console.log(data);
+                    })
+            } else {
+                alert("請先登入");
+            }
+        }
+        // 頁面加載時執行
+        displayUserName();
         fetchProducts();
 
-
-        async function addCart(productid) {
-            
-        }
-
-
-        //下面為測試名稱顯示以及解析token跟cookie
-        // 解析 JWT Token 的 Payload
-        function parseJwt(token) {
-            const base64Url = token.split('.')[1]; // 取得第二部分 (Payload)
-            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-            return JSON.parse(jsonPayload);
-        }
-
-        // 從 Cookie 中提取 Token
-        function getCookie(name) {
-            console.log(document.cookie);
-            
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
-        }
-        
-
-        // 動態顯示用戶名稱
-        function displayUserName() {
-            const token = getCookie('authToken'); // 從 Cookie 中獲取 Token
-            if (token) {
-                const userInfo = parseJwt(token); // 解碼 Token
-                const userName = userInfo.userAccount; // 假設 Token Payload 中有 `userAccount` 字段
-                document.getElementById('userGreeting').innerText = `歡迎, ${userName}`;
-            } else {
-                document.getElementById('userGreeting').innerText = '未登入';
-            }
-        }
-        console.log(getCookie('authToken'));
-        // 頁面加載時執行
-        window.onload = function () {
-            displayUserName();
-        };
-
     </script>
-
 </body>
 
 </html>

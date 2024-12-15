@@ -1,6 +1,7 @@
 package com.example.myspringbootpractice.controller;
 
 import com.example.myspringbootpractice.Service.ProductService;
+import com.example.myspringbootpractice.dto.CartPro;
 import com.example.myspringbootpractice.dto.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,5 +30,10 @@ public class ProductController {
     public ResponseEntity<Product> getProductById(@PathVariable int productId) {
 
         return ResponseEntity.ok(productService.getProductById(productId));
+    }
+    @PostMapping("AddToCart")
+    public ResponseEntity addToCart(@RequestBody CartPro cartPro) {
+        String response = productService.addProductToCart(cartPro);
+        return ResponseEntity.ok(response);
     }
 }
