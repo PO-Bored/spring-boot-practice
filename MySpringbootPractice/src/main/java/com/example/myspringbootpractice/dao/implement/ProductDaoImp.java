@@ -5,6 +5,7 @@ import com.example.myspringbootpractice.dto.CartPro;
 import com.example.myspringbootpractice.dto.Product;
 import com.example.myspringbootpractice.rowMapper.ProductRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,8 @@ public class ProductDaoImp implements ProductDao {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Override
     public List<Product> getAllProduct() {
@@ -53,5 +56,24 @@ public class ProductDaoImp implements ProductDao {
         map.put("productId", cartPro.getProductId());
         int rowsAffected = namedParameterJdbcTemplate.update(sql, map);
         return rowsAffected > 0;
+    }
+
+    @Override
+    public List<Product> getUserProduct(int userId) {
+        String sql = "SELECT productId FROM productsincart WHERE userId=?;";
+        List<Integer> productIds = jdbcTemplate.queryForList(sql,Integer.class,userId);
+        if(productIds==null){
+            return null;
+        }else{
+            for(int id:productIds){
+                System.out.println(id);
+            }
+        }
+        String sql2 = "SELECT  productid, name, description, price, stock," +
+                "img_url FROM product WHERE productId IN (:productIds)";
+        Map<String, Object> map = new HashMap<>();
+        map.put("productIds",productIds);
+        List<Product> products = namedParameterJdbcTemplate.query(sql2,map,new ProductRowMapper());
+        return products;
     }
 }

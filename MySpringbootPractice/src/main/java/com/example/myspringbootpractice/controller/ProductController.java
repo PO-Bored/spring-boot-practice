@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/product")
@@ -31,11 +30,14 @@ public class ProductController {
 
         return ResponseEntity.ok(productService.getProductById(productId));
     }
-    @PostMapping("AddToCart")
+    @PostMapping("/AddToCart")
     public ResponseEntity addToCart(@RequestBody CartPro cartPro) {
         String response = productService.addProductToCart(cartPro);
         return ResponseEntity.ok(response);
     }
 
-    public int[] cartProducts()
+    @PostMapping("/Cart")
+    public ResponseEntity<List<Product>> getUserProduct(@RequestBody CartPro cartPro){
+        return ResponseEntity.ok(productService.getUserProducts(cartPro.getUserId()));
+    }
 }

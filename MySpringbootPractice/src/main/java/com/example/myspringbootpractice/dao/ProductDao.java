@@ -11,4 +11,6 @@ public interface ProductDao {
     Product getProductById(int productId);
 
     boolean addProductToCart(CartPro cartPro);
+
+    List<Product> getUserProduct(int userId);
 }

@@ -12,4 +12,6 @@ public interface ProductService {
     Product getProductById(int id);
 
     String addProductToCart(CartPro cartPro);
+
+    List<Product> getUserProducts(int userId);
 }
