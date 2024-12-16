@@ -36,4 +36,6 @@ public class ProductController {
         String response = productService.addProductToCart(cartPro);
         return ResponseEntity.ok(response);
     }
+
+    public int[] cartProducts()
 }
