@@ -39,7 +39,7 @@ public class ProductServiceImp implements ProductService {
         return "商品已在購物車";
     }
 
-    //TODO
+
     @Override
     public List<Product> getUserProducts(int userId) {
         List<Product> products = productDao.getUserProduct(userId);
