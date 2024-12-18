@@ -20,18 +20,20 @@ main {
     flex-wrap: wrap;
     justify-content: center;
     padding: 20px;
-
-    border: 2px solid #1e1a1a; /* 邊框寬度、樣式與顏色 */
+    border: 2px solid #ccc; /* 邊框寬度、樣式與顏色 */
     border-radius: 10px;    /* 圓角邊框，可選 */
+    
 }
 
-.cart-container {
+.cart-counter {
     border: 1px solid #ccc;
     width: 70%;
     padding: 10px;
     max-height: 400px;
     overflow-y: scroll;
     background-color: white;
+    border-radius: 5px;
+    margin: auto 10px; 
 }
 
 /* 單一商品區塊 */
@@ -60,8 +62,9 @@ main {
 
 /* 總金額區域 */
 .summary {
-    width: 25%;
+    width: 15%;
     border: 1px solid #ccc;
+    border-radius: 5px;
     padding: 20px;
     background-color: white;
 }
