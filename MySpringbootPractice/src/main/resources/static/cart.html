@@ -15,43 +15,11 @@
             <!-- 用戶名稱將顯示在這裡 -->
         </div>
     </header>
-
     <div>
         <h2>購物車清單</h2>
     </div>
-
-
     <main>
         <section class="cart-counter">
-            <div class="cart-item">
-                <img src="圖片網址" alt="商品名稱" class="product-image">
-                <div class="product-details">
-                    <p>商品1</p>
-                    <p>單價：<span class="unit-price">xxx</span></p>
-                    <p>總價：<span class="total-price">0</span></p>
-                    <input type="number" value="1" min="1" class="quantity">
-                </div>
-            </div>
-
-            <div class="cart-item">
-                <img src="圖片網址" alt="商品名稱" class="product-image">
-                <div class="product-details">
-                    <p>商品1</p>
-                    <p>單價：<span class="unit-price">xxx</span></p>
-                    <p>總價：<span class="total-price">0</span></p>
-                    <input type="number" value="1" min="1" class="quantity">
-                </div>
-            </div>
-
-            <div class="cart-item">
-                <img src="圖片網址" alt="商品名稱" class="product-image">
-                <div class="product-details">
-                    <p>商品1</p>
-                    <p>單價：<span class="unit-price">xxx</span></p>
-                    <p>總價：<span class="total-price">0</span></p>
-                    <input type="number" value="1" min="1" class="quantity">
-                </div>
-            </div>
         </section>
 
         <!--總金額區域-->
@@ -65,82 +33,135 @@
 <script>
     // 解析 JWT Token 的 Payload
     function parseJwt(token) {
-            const base64Url = token.split('.')[1]; // 取得第二部分 (Payload)
-            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-            return JSON.parse(jsonPayload);
+        const base64Url = token.split('.')[1]; // 取得第二部分 (Payload)
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    }
+
+    // 從 Cookie 中提取 Token
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    // 動態顯示用戶名稱
+    function displayUserName() {
+        const token = getCookie('authToken'); // 從 Cookie 中獲取 Token
+        if (token) {
+            const userInfo = parseJwt(token); // 解碼 Token
+            const userAccount = userInfo.userAccount; // 假設 Token Payload 中有 `userAccount` 字段
+            document.getElementById('userGreeting').innerText = `歡迎, ${userAccount}`;
+        } else {
+            document.getElementById('userGreeting').innerText = '未登入';
+        }
+    }
+
+    displayUserName();
+    fetchUserProduct();
+
+
+
+    //從cookie裡取得token並解析出userId
+    function getUserId() {
+        const token = getCookie('authToken');
+        const payload = parseJwt(token);
+        const userId = payload.sub;
+        return userId;
+    }
+
+
+    async function fetchUserProduct() {
+        const userId = {
+            userId: getUserId()
+        }
+        const response = await fetch('http://localhost:8080/product/Cart', {
+            method: "Post",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify(userId)
+        });
+
+        if (response.ok) {
+            const userProduct = await response.json();
+            readProducts(userProduct);
+            console.log(userProduct);
+            calculateGrandTotal();
         }
 
-        // 從 Cookie 中提取 Token
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
-        }
-
-        // 動態顯示用戶名稱
-        function displayUserName() {
-            const token = getCookie('authToken'); // 從 Cookie 中獲取 Token
-            if (token) {
-                const userInfo = parseJwt(token); // 解碼 Token
-                const userAccount = userInfo.userAccount; // 假設 Token Payload 中有 `userAccount` 字段
-                document.getElementById('userGreeting').innerText = `歡迎, ${userAccount}`;
-            } else {
-                document.getElementById('userGreeting').innerText = '未登入';
-            }
-        }
-
-        displayUserName();
-
-
-        //從cookie裡取得token並解析出userId
-        function getUserId(){
-            const token = getCookie('authToken');
-            const payload = parseJwt(token);
-            const userId = payload.sub;
-            return userId;
-        }
-
-
-        async function fetchUserProduct(){
-            const userId = {
-                userId: getUserId()
-            }
-            const response = await fetch('http://localhost:8080/product/Cart',{
-                method: "Post",
-                headers: {
-                        "Content-Type": "application/json"
-                    },
-                credentials: "include",
-                body: JSON.stringify(userId)
-            });
-
-            if(response.ok){
-                const userProduct = await response.json();
-                readProducts(userProduct);
-            }
-
-            //讀取UserProduct
-            function readProducts(products) {
-                const productList = document.getElementById("product-list");
-                productList.innerHTML = " ";//把已有的內容清空
-                //TODO
-                products.forEach(product => {
-                    const productDiv = document.createElement('div');
-                    productDiv.className = "product";
-                    productDiv.dataset.id = product.productId;
-                    productDiv.innerHTML = `
-                        <img src = "${product.imgurl}" alt = ${product.name}width = "300" height = "200" >
-                        <h3>${product.name}</h3>
-                        <p>售價 $${product.price}</p>
-                        <button class="add-to-cart" >加入購物車</button>
+        //讀取UserProduct
+        function readProducts(products) {
+            const productList = document.querySelector(".cart-counter");
+            productList.innerHTML = " ";//把已有的內容清空
+            products.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.className = "cart-item";
+                productDiv.dataset.id = product.productId;
+                productDiv.innerHTML = `
+                    <img src = "${product.imgurl}" alt = "${product.name}" class="product-image" >
+                    <div class="product-details">
+                        <p>${product.name}</p>
+                        <p>單價：<span class="unit-price">${product.price}</span></p>
+                        <p>總價：<span class="total-price">${product.price}</span></p>
+                        <input type="number" value="1" min="1" class="quantity">
+                    </div>
                         `;
-                    productList.appendChild(productDiv);
-                });
 
+                productList.appendChild(productDiv);
+                //讓總價跟著數量增加
+                const quantityInput = productDiv.querySelector('.quantity');
+                if (quantityInput) {
+                    quantityInput.addEventListener('input', (event) => {
+                        const quantity = event.target.value; // 取得當前數量
+                        const unitPrice = parseFloat(product.price); // 單價
+                        const totalPrice = productDiv.querySelector('.total-price');
+                        if (totalPrice) {
+                            totalPrice.textContent = (unitPrice * quantity); // 更新總價
+                        }
+                        
+                    });
+                } else {
+                    console.error("Quantity input not found in productDiv:", productDiv);
+                }
+            });
         }
+
+
+    }
+    function calculateGrandTotal() {
+        let total = 0;
+
+        // 選取所有 .total-price 元素
+        const totalPrices = document.getElementsByClassName('total-price');
+
+        // 將 HTMLCollection 轉換為陣列，然後遍歷每個元素
+        Array.from(totalPrices).forEach(priceElement => {
+            const price = parseFloat(priceElement.innerText.trim()); // 使用 innerText 取得值並轉換為數字
+            if (!isNaN(price)) {
+                total += price; // 累加
+            }
+        });
+
+        console.log(total);
+
+        const grandTotalElement = document.getElementById("grand-total");
+        if (grandTotalElement) {
+            grandTotalElement.textContent = total;
+        }
+    }
+
+    document.addEventListener('input', (event) => {
+        if (event.target.classList.contains('quantity')) {
+            calculateGrandTotal();
+        }
+    })
+    
+
 </script>
 
 </html>
