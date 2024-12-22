@@ -2,8 +2,10 @@ package com.example.myspringbootpractice.controller;
 
 import com.example.myspringbootpractice.Service.ProductService;
 import com.example.myspringbootpractice.dto.CartPro;
+import com.example.myspringbootpractice.dto.Orders;
 import com.example.myspringbootpractice.dto.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,5 +41,14 @@ public class ProductController {
     @PostMapping("/Cart")
     public ResponseEntity<List<Product>> getUserProduct(@RequestBody CartPro cartPro){
         return ResponseEntity.ok(productService.getUserProducts(cartPro.getUserId()));
+    }
+
+    @PostMapping("/CheckOut")
+    public ResponseEntity checkOut(@RequestBody Orders order){
+        int Ser = service.createOrder(order);
+        if(Ser==1){
+            return ResponseEntity.ok(1);
+        }
+        return ResponseEntity.ok(0);
     }
 }
