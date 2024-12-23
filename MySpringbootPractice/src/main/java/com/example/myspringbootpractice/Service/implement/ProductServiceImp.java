@@ -58,4 +58,14 @@ public class ProductServiceImp implements ProductService {
         System.out.println("新增訂單資訊失敗");
             return 0;
     }
+
+    @Override
+    public void deleteCart(Integer userId) {
+        Integer rowChange = productDao.deleteCart(userId);
+        if(rowChange > 0){
+            System.out.println("清除"+userId+"號客戶購物車成功");
+        }else{
+            System.out.println("清除"+userId+"號客戶購物車失敗");
+        }
+    }
 }

@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -80,6 +81,7 @@ public class ProductDaoImp implements ProductDao {
         return products;
     }
 
+    @Transactional
     @Override
     public int createOrder(Orders order) {
         String forOrdersSql = "INSERT INTO orders (user_id, grand_price) VALUES (:userId, :grandPrice)";
@@ -114,5 +116,15 @@ public class ProductDaoImp implements ProductDao {
         }else{
             return 0;
         }
+    }
+    @Transactional
+    @Override
+    public Integer deleteCart(Integer userId) {
+        String sql = "DELETE FROM productsInCart WHERE userId=:userId;";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        int rowsAffected = namedParameterJdbcTemplate.update(sql, map);
+        return rowsAffected;
     }
 }

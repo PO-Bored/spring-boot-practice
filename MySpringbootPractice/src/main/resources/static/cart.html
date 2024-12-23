@@ -25,7 +25,7 @@
         <!--總金額區域-->
         <aside class="summary">
             <p>總價 NT：<span id="grand-total">0</span></p>
-            <button id="checkout-button">結帳</button>
+            <button id="checkout-button" onclick="details()">結帳</button>
         </aside>
     </main>
 </body>
@@ -123,7 +123,7 @@
                         if (totalPrice) {
                             totalPrice.textContent = (unitPrice * quantity); // 更新總價
                         }
-                        
+
                     });
                 } else {
                     console.error("Quantity input not found in productDiv:", productDiv);
@@ -160,7 +160,66 @@
             calculateGrandTotal();
         }
     })
-    
+
+    async function details() {
+        const orderDetails = [];
+        const cartItems = document.querySelectorAll('.cart-item');
+
+        cartItems.forEach(item => {
+            const productId = item.dataset.id; //從dataset取得ID
+            const quantity = parseInt(item.querySelector('.quantity').value, 10);
+            const price = parseInt(item.querySelector('.unit-price').textContent);
+
+            orderDetails.push({
+                productId: productId,
+                quantity: quantity,
+                price: price
+            });
+        });
+
+        const grandPrice = parseInt(document.getElementById("grand-total").textContent);
+
+        const orders = {
+            userId: getUserId(),
+            orderDetails: orderDetails,
+            grandPrice: grandPrice
+        };
+        console.log("orders：", orders);
+        try {
+            const response = await fetch('http://localhost:8080/product/CheckOut', {
+                method: "Post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify(orders)
+            });
+
+            if (response.ok) {
+                alert("交易成功，請確認訂單");
+                const productList = document.querySelector(".cart-counter");
+                productList.innerHTML = " ";
+                document.getElementById("grand-total").textContent = 0;
+                deleteCart();
+            }
+        } catch (error) {
+            alert("交易失敗");
+        }
+    }
+
+    async function deleteCart() {
+
+        const userId = getUserId();
+        const response = await fetch('http://localhost:8080/product/DeleteCart', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify(userId)
+        });
+
+    }
 
 </script>
 

@@ -18,4 +18,6 @@ public interface ProductService {
     List<Product> getUserProducts(int userId);
 
     int createOrder(Orders order);
+
+    void deleteCart(Integer userId);
 }

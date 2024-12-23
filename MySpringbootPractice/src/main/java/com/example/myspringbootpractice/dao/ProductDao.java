@@ -17,4 +17,6 @@ public interface ProductDao {
     List<Product> getUserProduct(int userId);
 
     int createOrder(Orders order);
+
+    Integer deleteCart(Integer userId);
 }

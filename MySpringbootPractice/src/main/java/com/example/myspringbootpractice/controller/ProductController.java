@@ -7,6 +7,8 @@ import com.example.myspringbootpractice.dto.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,6 +45,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.getUserProducts(cartPro.getUserId()));
     }
 
+
     @PostMapping("/CheckOut")
     public ResponseEntity checkOut(@RequestBody Orders order){
         int Ser = service.createOrder(order);
@@ -50,5 +53,10 @@ public class ProductController {
             return ResponseEntity.ok(1);
         }
         return ResponseEntity.ok(0);
+    }
+
+    @PostMapping("/DeleteCart")
+    public void deleteCart(@RequestBody Integer userId){
+        service.deleteCart(userId);
     }
 }
