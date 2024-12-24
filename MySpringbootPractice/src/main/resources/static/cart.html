@@ -25,7 +25,7 @@
         <!--總金額區域-->
         <aside class="summary">
             <p>總價 NT：<span id="grand-total">0</span></p>
-            <button id="checkout-button" onclick="details()">結帳</button>
+            <button id="checkout-button" onclick=details()>結帳</button>
         </aside>
     </main>
 </body>
@@ -123,7 +123,7 @@
                         if (totalPrice) {
                             totalPrice.textContent = (unitPrice * quantity); // 更新總價
                         }
-
+                        
                     });
                 } else {
                     console.error("Quantity input not found in productDiv:", productDiv);
