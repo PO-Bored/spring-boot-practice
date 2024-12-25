@@ -1,0 +1,85 @@
+/* 全局樣式 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+/* 頁面標題 */
+header {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+main {
+    display: flex;
+    margin: 50px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+    border: 2px solid #ccc; /* 邊框寬度、樣式與顏色 */
+    border-radius: 10px;    /* 圓角邊框，可選 */
+    
+}
+
+.detail-counter {
+    border: 1px solid #ccc;
+    width: 70%;
+    padding: 10px;
+    max-height: 400px;
+    overflow-y: scroll;
+    background-color: white;
+    border-radius: 5px;
+    margin: auto 10px; 
+}
+
+/* 單一商品區塊 */
+.detail-item {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.product-image {
+    width: 80px;
+    height: 80px;
+    margin-right: 10px;
+    background-color: #ccc;
+}
+
+.product-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* 總金額區域 */
+.summary {
+    width: 15%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: white;
+}
+
+#checkout-button {
+    display: block;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#checkout-button:hover {
+    background-color: #0056b3;
+}

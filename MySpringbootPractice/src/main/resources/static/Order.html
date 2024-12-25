@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/cart.css">
+    <link rel="stylesheet" href="/css/order.css">
     <title>Document</title>
 </head>
+
 <body>
     <header>
         <h1>簡易購物車系統</h1>
@@ -17,13 +19,92 @@
         <h2>訂單清單</h2>
     </div>
     <main>
-        <section class="cart-counter">
-        </section>
+        <section class="detail-counter">
 
+        </section>
     </main>
 </body>
 
 <script>
+    // 解析 JWT Token 的 Payload
+    function parseJwt(token) {
+        const base64Url = token.split('.')[1]; // 取得第二部分 (Payload)
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    }
+
+    // 從 Cookie 中提取 Token
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    //從cookie裡取得token並解析出userId
+    function getUserId() {
+        const token = getCookie('authToken');
+        const payload = parseJwt(token);
+        const userId = payload.sub;
+        return userId;
+    }
+
+    // 動態顯示用戶名稱
+    function displayUserName() {
+        const token = getCookie('authToken'); // 從 Cookie 中獲取 Token
+        if (token) {
+            const userInfo = parseJwt(token); // 解碼 Token
+            const userAccount = userInfo.userAccount; // 假設 Token Payload 中有 `userAccount` 字段
+            document.getElementById('userGreeting').innerText = `歡迎, ${userAccount}`;
+        } else {
+            document.getElementById('userGreeting').innerText = '未登入';
+        }
+    }
+    displayUserName();
+    getOrderDetails();
+    async function getOrderDetails() {
+        const userId = {
+            userId: getUserId()
+        };
+        const response = await fetch("http://localhost:8080/order/getOrders", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify(userId)
+        });
+
+        if (response.ok) {
+            const details = await response.json();
+            readDetails(details);
+            console.log(details);
+        }
+
+
+        function readDetails(details) {
+            const detailList = document.querySelector(".detail-counter");
+            detailList.innerHTML = " ";//把已有的內容清空
+            details.forEach(detail => {
+                const detailsDiv = document.createElement('div');
+                detailsDiv.className = "detail-item";
+                detailsDiv.dataset.id = detail.productId;
+                detailsDiv.innerHTML = `
+                    <img src = "${detail.imgUrl}" alt = "${detail.productName}" class="product-image" >
+                    <div class="product-details">
+                        <p>${detail.productName}</p>
+                        <p>單價：<span class="unit-price">${detail.price}</span></p>
+                        <p>數量：<span class="quantity">${detail.quantity}</span></p>
+                        <p>總價：<span class="total-price">${detail.price}</span></p>
+                    </div>
+                        `;
+                detailList.appendChild(detailsDiv);
+            });
+        };
+    }
+
 
 </script>
+
 </html>
