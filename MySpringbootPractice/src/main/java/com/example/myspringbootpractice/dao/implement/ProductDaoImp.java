@@ -66,12 +66,8 @@ public class ProductDaoImp implements ProductDao {
     public List<Product> getUserProduct(int userId) {
         String sql = "SELECT productId FROM productsincart WHERE userId=?;";
         List<Integer> productIds = jdbcTemplate.queryForList(sql,Integer.class,userId);
-        if(productIds==null){
-            return null;
-        }else{
-            for(int id:productIds){
-                System.out.println(id);
-            }
+        if(productIds.isEmpty()){
+            return Collections.emptyList();
         }
         String sql2 = "SELECT  productid, name, description, price, stock," +
                 "img_url FROM product WHERE productId IN (:productIds)";

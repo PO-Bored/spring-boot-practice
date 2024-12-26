@@ -12,7 +12,12 @@
     <header>
         <h1>簡易購物車系統</h1>
         <div id="userGreeting" style="position: absolute; top: 10px; right: 10px;">
+            <!-- 新增購物車按鈕 -->
+            <button id="cartButton" class="header-button" onclick="navigateToCart()">購物車</button>
+            <!-- 新增商店按鈕 -->
+            <button id="shopButton" class="header-button" onclick="navigateToShop()">商店</button>
             <!-- 用戶名稱將顯示在這裡 -->
+            <span id="userName">歡迎, 測試前端一號</span>
         </div>
     </header>
     <div>
@@ -56,9 +61,9 @@
         if (token) {
             const userInfo = parseJwt(token); // 解碼 Token
             const userAccount = userInfo.userAccount; // 假設 Token Payload 中有 `userAccount` 字段
-            document.getElementById('userGreeting').innerText = `歡迎, ${userAccount}`;
+            document.getElementById('userName').innerText = `歡迎, ${userAccount}`;
         } else {
-            document.getElementById('userGreeting').innerText = '未登入';
+            document.getElementById('userName').innerText = '未登入';
         }
     }
     displayUserName();
@@ -102,6 +107,14 @@
                 detailList.appendChild(detailsDiv);
             });
         };
+    }
+
+    function navigateToShop() {
+        window.location.href = "/home.html";
+    }
+
+    function navigateToCart() {
+        window.location.href = "/cart.html";
     }
 
 

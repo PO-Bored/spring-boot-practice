@@ -12,7 +12,15 @@
     <header>
         <h1>簡易購物車系統</h1>
         <div id="userGreeting" style="position: absolute; top: 10px; right: 10px;">
+
+            <!-- 新增查詢訂單按鈕 -->
+            <button id="orderButton" class="header-button" onclick="navigateToOrders()">查詢訂單</button>
+
+            <!-- 新增商店按鈕 -->
+            <button id="shopButton" class="header-button" onclick="navigateToShop()">商店</button>
+
             <!-- 用戶名稱將顯示在這裡 -->
+            <span id="userName">歡迎, 測試前端一號</span>
         </div>
     </header>
     <div>
@@ -25,7 +33,7 @@
         <!--總金額區域-->
         <aside class="summary">
             <p>總價 NT：<span id="grand-total">0</span></p>
-            <button id="checkout-button" onclick=details()>結帳</button>
+            <button id="checkout-button" onclick="details()">結帳</button>
         </aside>
     </main>
 </body>
@@ -54,9 +62,9 @@
         if (token) {
             const userInfo = parseJwt(token); // 解碼 Token
             const userAccount = userInfo.userAccount; // 假設 Token Payload 中有 `userAccount` 字段
-            document.getElementById('userGreeting').innerText = `歡迎, ${userAccount}`;
+            document.getElementById('userName').innerText = `歡迎, ${userAccount}`;
         } else {
-            document.getElementById('userGreeting').innerText = '未登入';
+            document.getElementById('userName').innerText = '未登入';
         }
     }
 
@@ -87,7 +95,7 @@
             body: JSON.stringify(userId)
         });
 
-        if (response.ok) {
+        if (response.ok) { 
             const userProduct = await response.json();
             readProducts(userProduct);
             console.log(userProduct);
@@ -98,6 +106,12 @@
         function readProducts(products) {
             const productList = document.querySelector(".cart-counter");
             productList.innerHTML = " ";//把已有的內容清空
+
+            if (products.length === 0) {
+            // 如果購物車為空，顯示提示文字
+            productList.innerHTML = "<p>購物車內沒有商品</p>";
+            return;
+        }
             products.forEach(product => {
                 const productDiv = document.createElement('div');
                 productDiv.className = "cart-item";
@@ -123,7 +137,7 @@
                         if (totalPrice) {
                             totalPrice.textContent = (unitPrice * quantity); // 更新總價
                         }
-                        
+
                     });
                 } else {
                     console.error("Quantity input not found in productDiv:", productDiv);
@@ -219,6 +233,14 @@
             body: JSON.stringify(userId)
         });
 
+    }
+
+    function navigateToShop(){
+        window.location.href = "/home.html";
+    }
+
+    function navigateToOrders() {
+        window.location.href = "/Order.html";
     }
 
 </script>

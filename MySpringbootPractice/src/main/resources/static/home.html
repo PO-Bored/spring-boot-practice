@@ -7,44 +7,7 @@
     <link rel="stylesheet" href="/css/home.css">
     <title>首頁</title>
     <style>
-        .cart-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            position: relative;
-        }
-
-        .cart-button:hover {
-            background-color: #0056b3;
-        }
-
-        .cart-button i {
-            margin-right: 10px;
-            /* 圖標和文字之間的間距 */
-        }
-
-        .cart-counter {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: red;
-            color: white;
-            border-radius: 50%;
-            font-size: 12px;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        
     </style>
 </head>
 
@@ -52,9 +15,18 @@
     <header>
         <h1>簡易購物車系統</h1>
         <div id="userGreeting" style="position: absolute; top: 10px; right: 10px;">
+
+            <!-- 新增購物車按鈕 -->
+            <button id="cartButton" class="header-button" onclick="navigateToCart()">購物車</button>
+
+            <!-- 新增查詢訂單按鈕 -->
+            <button id="orderButton" class="header-button" onclick="navigateToOrders()">查詢訂單</button>
+
             <!-- 用戶名稱將顯示在這裡 -->
+            <span id="userName">歡迎, 測試前端一號</span>
         </div>
     </header>
+
     <div>
         <h2>商品訂購</h2>
     </div>
@@ -62,16 +34,7 @@
     <main id="product-list">
 
     </main>
-    <section class="cart">
-        <!-- 購物車按鈕 -->
-        <button class="cart-button" id="cartButton">
-            <i class="fas fa-shopping-cart"></i> 購物車
-            <div class="cart-counter" id="cartCounter">0</div>
-        </button>
-    </section>
-
-
-
+    
     <script>
         //第一部分
         //下面為測試名稱顯示以及解析token跟cookie
@@ -100,9 +63,9 @@
             if (token) {
                 const userInfo = parseJwt(token); // 解碼 Token
                 const userAccount = userInfo.userAccount; // 假設 Token Payload 中有 `userAccount` 字段
-                document.getElementById('userGreeting').innerText = `歡迎, ${userAccount}`;
+                document.getElementById('userName').innerText = `歡迎, ${userAccount}`;
             } else {
-                document.getElementById('userGreeting').innerText = '未登入';
+                document.getElementById('userName').innerText = '未登入';
             }
         }
         console.log(getCookie('authToken'));
@@ -203,6 +166,14 @@
         // 頁面加載時執行
         displayUserName();
         fetchProducts();
+
+        function navigateToCart(){
+            window.location.href = "/cart.html";
+        }
+
+        function navigateToOrders(){
+            window.location.href = "/Order.html";
+        }
 
     </script>
 </body>
