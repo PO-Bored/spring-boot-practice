@@ -20,4 +20,6 @@ public interface ProductService {
     int createOrder(Orders order);
 
     void deleteCart(Integer userId);
+
+    Integer deleteProductInCart(CartPro cartPro);
 }

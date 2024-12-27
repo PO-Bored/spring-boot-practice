@@ -123,4 +123,14 @@ public class ProductDaoImp implements ProductDao {
         int rowsAffected = namedParameterJdbcTemplate.update(sql, map);
         return rowsAffected;
     }
+    @Transactional
+    @Override
+    public Integer deleteProductInCart(CartPro cartPro) {
+        String sql = "DELETE FROM productsInCart WHERE userId=:userId AND productId=:productId;";
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", cartPro.getUserId());
+        map.put("productId", cartPro.getProductId());
+        Integer rowsAffected = namedParameterJdbcTemplate.update(sql, map);
+        return rowsAffected;
+    }
 }

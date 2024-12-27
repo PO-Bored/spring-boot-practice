@@ -68,4 +68,15 @@ public class ProductServiceImp implements ProductService {
             System.out.println("清除"+userId+"號客戶購物車失敗");
         }
     }
+
+    @Override
+    public Integer deleteProductInCart(CartPro cartPro) {
+        Integer rowsAffected = productDao.deleteProductInCart(cartPro);
+        if(rowsAffected > 0){
+            System.out.println("刪除清單中商品成功");
+        }else{
+            System.out.println("刪除清單中商品失敗");
+        }
+        return rowsAffected;
+    }
 }

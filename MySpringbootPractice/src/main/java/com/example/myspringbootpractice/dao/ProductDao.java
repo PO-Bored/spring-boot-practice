@@ -19,4 +19,6 @@ public interface ProductDao {
     int createOrder(Orders order);
 
     Integer deleteCart(Integer userId);
+
+    Integer deleteProductInCart(CartPro cartPro);
 }

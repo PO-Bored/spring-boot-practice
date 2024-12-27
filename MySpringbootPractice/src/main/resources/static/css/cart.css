@@ -48,8 +48,8 @@ main {
 }
 
 .product-image {
-    width: 80px;
-    height: 80px;
+    width: 160px;
+    height: 160px;
     margin-right: 10px;
     background-color: #ccc;
 }

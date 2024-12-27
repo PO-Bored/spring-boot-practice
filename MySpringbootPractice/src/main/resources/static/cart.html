@@ -95,7 +95,7 @@
             body: JSON.stringify(userId)
         });
 
-        if (response.ok) { 
+        if (response.ok) {
             const userProduct = await response.json();
             readProducts(userProduct);
             console.log(userProduct);
@@ -108,10 +108,10 @@
             productList.innerHTML = " ";//把已有的內容清空
 
             if (products.length === 0) {
-            // 如果購物車為空，顯示提示文字
-            productList.innerHTML = "<p>購物車內沒有商品</p>";
-            return;
-        }
+                // 如果購物車為空，顯示提示文字
+                productList.innerHTML = "<p>購物車內沒有商品</p>";
+                return;
+            }
             products.forEach(product => {
                 const productDiv = document.createElement('div');
                 productDiv.className = "cart-item";
@@ -123,6 +123,7 @@
                         <p>單價：<span class="unit-price">${product.price}</span></p>
                         <p>總價：<span class="total-price">${product.price}</span></p>
                         <input type="number" value="1" min="1" class="quantity">
+                        <button class="delete-item">刪除商品</button>
                     </div>
                         `;
 
@@ -144,9 +145,44 @@
                 }
             });
         }
-
-
     }
+
+    // 刪除按鈕點擊事件
+    document.querySelector(".cart-counter").addEventListener("click", async (event) => {
+        // 檢查點擊的目標是否為刪除按鈕
+        if (event.target.classList.contains("delete-item")) {
+            // 獲取商品的父容器
+            const productDiv = event.target.closest(".cart-item");
+            const productId = productDiv.dataset.id; // 從父容器獲取 productId
+
+            // 確認是否刪除
+            if (confirm("確定刪除此商品嗎？")) {
+                try {
+                    // 發送刪除請求到後端
+                    const response = await fetch("http://localhost:8080/product/DeleteProductInCart", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ userId: getUserId(), productId: productId })
+                    });
+
+                    if (response.ok) {
+                        // 從 DOM 中移除該商品
+                        productDiv.remove();
+                        alert("商品已刪除！");
+                        calculateGrandTotal(); // 更新總價
+                    } else {
+                        alert("刪除失敗，請稍後再試！");
+                    }
+                } catch (error) {
+                    console.error("刪除失敗：", error);
+                    alert("刪除失敗，請稍後再試！");
+                }
+            }
+        }
+    });
+
     function calculateGrandTotal() {
         let total = 0;
 
@@ -235,7 +271,7 @@
 
     }
 
-    function navigateToShop(){
+    function navigateToShop() {
         window.location.href = "/home.html";
     }
 

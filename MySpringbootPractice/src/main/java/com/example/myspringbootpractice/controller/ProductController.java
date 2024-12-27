@@ -59,4 +59,10 @@ public class ProductController {
     public void deleteCart(@RequestBody Integer userId){
         service.deleteCart(userId);
     }
+
+    @PostMapping("/DeleteProductInCart")
+    public ResponseEntity deleteProductInCart(@RequestBody CartPro cartPro){
+        Integer rowsAffected = productService.deleteProductInCart(cartPro);
+        return ResponseEntity.ok(rowsAffected);
+    }
 }
