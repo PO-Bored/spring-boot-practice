@@ -7,7 +7,6 @@ import com.example.myspringbootpractice.dto.Orders;
 import com.example.myspringbootpractice.dto.Product;
 import com.example.myspringbootpractice.rowMapper.ProductRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;

@@ -1,0 +1,71 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.login-container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    background: white;
+    border: 2px solid #1e1a1a;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    display: flex;
+    align-items: center; /* 垂直置中 */
+    justify-content: center; /* 水平置中 */
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    margin-right: 10px; /* 調整與輸入框的間距 */
+    text-align: right;
+    width: 80px; /* 固定寬度，讓 label 和 input 對齊 */
+}
+
+.form-group input {
+    flex: 1;
+    padding: 5px;
+    width: 200px; /* 固定寬度，保持一致 */
+    box-sizing: border-box; /* 確保內邊距不影響寬度 */
+}
+
+.actionForLogin {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.actionForLogin input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.actionForLogin input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.actionForLogin a {
+    display: block;
+    margin-top: 10px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.actionForLogin a:hover {
+    text-decoration: underline;
+}
+
+#responseMessage {
+    text-align: center;
+    margin-top: 20px;
+}

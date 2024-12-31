@@ -1,9 +1,7 @@
 package com.example.myspringbootpractice.dao.implement;
 
 import com.example.myspringbootpractice.dao.OrderDao;
-
 import com.example.myspringbootpractice.dto.OrderItems;
-
 import com.example.myspringbootpractice.rowMapper.OrderItemsRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

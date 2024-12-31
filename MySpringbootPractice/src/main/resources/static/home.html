@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/css/home.css">
     <title>首頁</title>
     <style>
-        
+
     </style>
 </head>
 
@@ -34,7 +34,7 @@
     <main id="product-list">
 
     </main>
-    
+
     <script>
         //第一部分
         //下面為測試名稱顯示以及解析token跟cookie
@@ -59,13 +59,19 @@
         // 動態顯示用戶名稱
         function displayUserName() {
             const token = getCookie('authToken'); // 從 Cookie 中獲取 Token
-            console.log(token);
+            const userNameElement = document.getElementById('userName');
             if (token) {
                 const userInfo = parseJwt(token); // 解碼 Token
                 const userAccount = userInfo.userAccount; // 假設 Token Payload 中有 `userAccount` 字段
-                document.getElementById('userName').innerText = `歡迎, ${userAccount}`;
+                userNameElement.innerText = `歡迎, ${userAccount}`;
+                userNameElement.style.cursor = "default"; // 移除指針效果
+                userNameElement.onclick = null; // 移除點擊事件
             } else {
-                document.getElementById('userName').innerText = '未登入';
+                userNameElement.innerText = '登入';
+                userNameElement.style.cursor = "pointer"; // 改為可點擊的效果
+                userNameElement.onclick = () => {
+                    window.location.href = 'login.html'; // 跳轉到 login.html
+                };
             }
         }
         console.log(getCookie('authToken'));
@@ -167,12 +173,24 @@
         displayUserName();
         fetchProducts();
 
-        function navigateToCart(){
-            window.location.href = "/cart.html";
+        
+
+        function navigateToCart() {
+            const token = getCookie('authToken');
+            if(token){
+                window.location.href = "/cart.html";
+            }else{
+                alert("請先登入");
+            }
         }
 
-        function navigateToOrders(){
-            window.location.href = "/Order.html";
+        function navigateToOrders() {
+            const token = getCookie('authToken');
+            if(token){
+                window.location.href = "/Order.html";
+            }else{
+                alert("請先登入");
+            }
         }
 
     </script>

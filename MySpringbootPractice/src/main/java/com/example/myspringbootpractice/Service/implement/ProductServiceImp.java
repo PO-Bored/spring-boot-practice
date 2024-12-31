@@ -7,7 +7,6 @@ import com.example.myspringbootpractice.dto.Orders;
 import com.example.myspringbootpractice.dto.Product;
 import com.example.myspringbootpractice.myException.productExceptionExtend.ProductNotfound;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

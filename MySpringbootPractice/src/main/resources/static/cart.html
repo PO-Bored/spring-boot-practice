@@ -70,6 +70,7 @@
 
     displayUserName();
     fetchUserProduct();
+    checkToken();
 
 
 
@@ -277,6 +278,14 @@
 
     function navigateToOrders() {
         window.location.href = "/Order.html";
+    }
+
+    function checkToken() {
+        const token = getCookie('authToken');
+        if (!token) {
+            alert("尚未登入，請先登入。");
+            window.location.href = "home.html";
+        }
     }
 
 </script>
